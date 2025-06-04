@@ -34,10 +34,9 @@ echo "Found ${#c_files[@]} C file(s) to compile and benchmark..."
 echo "========================================================"
 echo
 
-# Create results file
-results_file="benchmark_results_$(date +%Y%m%d_%H%M%S).txt"
-echo "Benchmark Results - $(date)" > "$results_file"
-echo "=======================================================" >> "$results_file"
+# Create results CSV file
+results_csv="benchmark_results_$(date +%Y%m%d_%H%M%S).csv"
+echo "filename,exec_size,max_mem_kb,disk_access,avg_time_sec" > "$results_csv"
 
 # Create bin directory if it doesn't exist
 bin_dir="./bin"
@@ -52,44 +51,29 @@ for file in "${c_files[@]}"; do
         filename=$(basename -- "$file")
         basename_noext="${filename%.c}"
         exe_path="$bin_dir/$basename_noext"
-        echo "Processing: $filename"
-        echo "----------------------------------------"
-        echo "Processing: $filename" >> "$results_file"
-        echo "----------------------------------------" >> "$results_file"
+        exec_size=""
+        max_mem=""
+        disk_access=""
+        avg_time=""
         # Compile with gcc, output to bin directory
-        echo "Compiling $file -> $exe_path"
         if gcc "$file" -o "$exe_path" -O2; then
-            echo "✓ Successfully compiled $file"
-            echo "✓ Successfully compiled $file" >> "$results_file"
             # Check if executable exists and is executable
             if [ -x "$exe_path" ]; then
-                echo "Executing and measuring performance..."
-                echo "Executing and measuring performance..." >> "$results_file"
-                # Get initial disk stats (if available)
-                if command -v iostat &> /dev/null; then
-                    iostat_before=$(iostat -d 1 1 | tail -n +4)
-                fi
-                echo "Execution output:" >> "$results_file"
-                echo "Running with high-precision timing..."
-                # Method 1: Use /usr/bin/time with format for microsecond precision
+                exec_size=$(ls -lh "$exe_path" | awk '{print $5}')
+                # Use /usr/bin/time for timing, memory, and disk access
                 if [ -f "/usr/bin/time" ]; then
-                    echo "Detailed timing (microsecond precision):" >> "$results_file"
-                    /usr/bin/time -f "Real time: %e seconds (%E elapsed)\nUser CPU time: %U seconds\nSystem CPU time: %S seconds\nCPU usage: %P\nMax memory: %M KB\nPage faults: %F major, %R minor\nFile system inputs: %I\nFile system outputs: %O" "$exe_path" 2>&1 | tee -a "$results_file"
-                    echo "" >> "$results_file"
+                    # %e = real time, %M = max mem, %I = fs inputs, %O = fs outputs
+                    time_output=$( /usr/bin/time -f "%e,%M,%I,%O" "$exe_path" 2>&1 >/dev/null )
+                    IFS=',' read -r real_time max_mem fs_inputs fs_outputs <<< "$time_output"
+                    disk_access=$((fs_inputs + fs_outputs))
                 else
-                    echo "Basic timing:" >> "$results_file"
-                    { time "$exe_path"; } 2>&1 | tee -a "$results_file"
-                    echo "" >> "$results_file"
+                    # Fallback: use date for real time only
+                    start_time=$(date +%s.%N)
+                    "$exe_path" > /dev/null 2>&1
+                    end_time=$(date +%s.%N)
+                    real_time=$(echo "$end_time - $start_time" | bc -l 2>/dev/null || awk "BEGIN {print $end_time - $start_time}")
                 fi
-                # Method 2: Additional high-precision timing with date (nanosecond precision)
-                echo "Nanosecond precision measurement:" >> "$results_file"
-                start_time=$(date +%s.%N)
-                "$exe_path" > /dev/null 2>&1
-                end_time=$(date +%s.%N)
-                execution_time=$(echo "$end_time - $start_time" | bc -l 2>/dev/null || awk "BEGIN {print $end_time - $start_time}")
-                printf "Execution time: %.9f seconds (%.3f milliseconds)\n" "$execution_time" "$(echo "$execution_time * 1000" | bc -l 2>/dev/null || awk "BEGIN {print $execution_time * 1000}")" | tee -a "$results_file"
-                # Method 3: Multiple runs for average (for very fast programs)
-                echo "Average of 10 runs:" >> "$results_file"
+                # Average of 10 runs (real time)
                 total_time=0
                 runs=10
                 for ((i=1; i<=runs; i++)); do
@@ -100,42 +84,16 @@ for file in "${c_files[@]}"; do
                     total_time=$(echo "$total_time + $run_time" | bc -l 2>/dev/null || awk "BEGIN {print $total_time + $run_time}")
                 done
                 avg_time=$(echo "scale=9; $total_time / $runs" | bc -l 2>/dev/null || awk "BEGIN {printf \"%.9f\", $total_time / $runs}")
-                printf "Average execution time: %.9f seconds (%.3f milliseconds)\n" "$avg_time" "$(echo "$avg_time * 1000" | bc -l 2>/dev/null || awk "BEGIN {print $avg_time * 1000}")" | tee -a "$results_file"
-                # Get disk stats after execution (if available)
-                if command -v iostat &> /dev/null; then
-                    iostat_after=$(iostat -d 1 1 | tail -n +4)
-                    echo "Disk I/O Stats:" >> "$results_file"
-                    echo "Before execution:" >> "$results_file"
-                    echo "$iostat_before" >> "$results_file"
-                    echo "After execution:" >> "$results_file"
-                    echo "$iostat_after" >> "$results_file"
-                fi
-                # Get file size of executable
-                exec_size=$(ls -lh "$exe_path" | awk '{print $5}')
-                echo "Executable size: $exec_size"
-                echo "Executable size: $exec_size" >> "$results_file"
-                # Check for core dumps or other files created
-                if ls core* &> /dev/null 2>&1; then
-                    echo "Warning: Core dump files detected"
-                    echo "Warning: Core dump files detected" >> "$results_file"
-                fi
-            else
-                echo "✗ Executable not found or not executable"
-                echo "✗ Executable not found or not executable" >> "$results_file"
             fi
-        else
-            echo "✗ Failed to compile $file"
-            echo "✗ Failed to compile $file" >> "$results_file"
         fi
-        echo ""
-        echo "=======================================================" >> "$results_file"
-        echo ""
+        # Write CSV row (empty fields if not available)
+        echo "$filename,$exec_size,$max_mem,$disk_access,$avg_time" >> "$results_csv"
     fi
 done
 
 echo "========================================================"
 echo "Benchmark process completed!"
-echo "Results saved to: $results_file"
+echo "Results saved to: $results_csv"
 echo ""
 echo "Summary of executables created:"
 for exe in "$bin_dir"/*; do
@@ -146,4 +104,4 @@ for exe in "$bin_dir"/*; do
 done
 
 echo ""
-echo "To view detailed results: cat $results_file"
+echo "To view detailed results: cat $results_csv"
