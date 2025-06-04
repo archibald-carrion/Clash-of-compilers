@@ -14,9 +14,9 @@ int main() {
         return 1;
     }
     
-    fprintf(file, "Hello world! This is a test.\n");
-    fprintf(file, "The world is beautiful.\n");
-    fprintf(file, "World peace is important.\n");
+    fprintf(file, "klaatu \n");
+    fprintf(file, "barada \n");
+    fprintf(file, "nikto \n");
     fclose(file);
     
     // Read entire file
