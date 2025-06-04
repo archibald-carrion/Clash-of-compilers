@@ -1,2 +1,4 @@
 train_real_compilable/
 refactored/
+*.pyc
+__pycache__/
