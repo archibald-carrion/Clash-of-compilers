@@ -315,7 +315,6 @@ class FunctionInfo:
         self.path = path
         self.io_pairs = io_pairs
 
-
 def main():
     """Main entry point."""
     try:
@@ -324,7 +323,6 @@ def main():
     except Exception as e:
         logger.error(f"❌ Processing failed: {e}")
         raise
-
 
 if __name__ == "__main__":
     main()
