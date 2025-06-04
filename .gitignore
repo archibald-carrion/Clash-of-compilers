@@ -5,4 +5,4 @@ __pycache__/
 
 # Ignore all files in build/bin folders (Linux-style outputs)
 build/*
-bin/*
+test_run/bin/*
