@@ -19,6 +19,7 @@ int bfs(int rGraph[V][V], int s, int t, int parent[]) {
             if (!visited[v] && rGraph[u][v] > 0) {
                 queue[rear++] = v;
                 parent[v] = u;
+                visited[v] = true;
                 if (v == t) return 1;
             }
         }
