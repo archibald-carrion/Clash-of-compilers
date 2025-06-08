@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <limits.h>
 
-#define V 5
-#define E 8
+#define NUM_VERTICES 5
+#define NUM_EDGES    8
 
 struct Edge {
     int src, dest, weight;
@@ -43,10 +43,11 @@ void bellmanFord(struct Edge edges[], int V, int E, int src) {
 }
 
 int main() {
-    struct Edge edges[] = {
+    struct Edge edges[NUM_EDGES] = {
         {0, 1, -1}, {0, 2, 4}, {1, 2, 3}, {1, 3, 2}, {1, 4, 2},
         {2, 3, 5}, {2, 4, 1}, {3, 4, -3}
     };
-    bellmanFord(edges, V, E, 0);
+
+    bellmanFord(edges, NUM_VERTICES, NUM_EDGES, 0);
     return 0;
 }

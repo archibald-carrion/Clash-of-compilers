@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define V 5
 
@@ -14,18 +15,21 @@ struct Graph* createGraph(int V) {
     graph->adj = (int**)malloc(V * sizeof(int*));
     for (int i = 0; i < V; i++) {
         graph->adj[i] = (int*)malloc(V * sizeof(int));
+        for (int j = 0; j < V; j++) {
+            graph->adj[i][j] = 0;
+        }
     }
     return graph;
 }
 
-void dfs(int graph[V][V], int v, bool visited[], int* stack) {
+void dfs(int graph[V][V], int v, bool visited[], int stack[], int* top) {
     visited[v] = true;
     for (int i = 0; i < V; i++) {
         if (graph[v][i] && !visited[i]) {
-            dfs(graph, i, visited, stack);
+            dfs(graph, i, visited, stack, top);
         }
     }
-    stack[(*stack)++] = v;
+    stack[(*top)++] = v;
 }
 
 void kosaraju(struct Graph* graph) {
@@ -35,11 +39,11 @@ void kosaraju(struct Graph* graph) {
 
     for (int i = 0; i < V; i++) {
         if (!visited[i]) {
-            dfs(graph->adj, i, visited, stack);
+            dfs(graph->adj, i, visited, stack, &top);
         }
     }
 
-    printf("Strongly Connected Components:\n");
+    printf("Orden de finalización (no SCCs):\n");
     for (int i = top - 1; i >= 0; i--) {
         printf("%d ", stack[i]);
     }

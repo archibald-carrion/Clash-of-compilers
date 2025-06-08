@@ -15,4 +15,5 @@ int max(int a, int b) {
 int height(struct Node* node) {
     if (node == NULL)
         return 0;
-    return node
+    return node->height;
+}

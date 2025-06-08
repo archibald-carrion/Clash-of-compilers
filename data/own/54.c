@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include  <math.h>
 
 double geometricSum(double a, double r, int n) {
     double sum = 0;

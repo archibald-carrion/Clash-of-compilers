@@ -51,13 +51,15 @@ void kruskal(struct Edge edges[], int V, int E) {
 
     printf("Minimum Spanning Tree:\n");
 
-    for (int i = 0; i < E; i++) {
+    int edgesInMST = 0;
+    for (int i = 0; i < E && edgesInMST < V - 1; i++) {
         int x = find(subsets, edges[i].src);
         int y = find(subsets, edges[i].dest);
 
         if (x != y) {
             printf("%d -- %d: %d\n", edges[i].src, edges[i].dest, edges[i].weight);
             unionSets(subsets, x, y);
+            edgesInMST++;
         }
     }
 }
