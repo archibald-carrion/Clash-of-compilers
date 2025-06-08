@@ -40,19 +40,19 @@ int compareEdges(const void* a, const void* b) {
     return ((struct Edge*)a)->weight - ((struct Edge*)b)->weight;
 }
 
-void kruskal(struct Edge edges[], int V, int E) {
-    struct Subset subsets[V];
-    for (int i = 0; i < V; i++) {
+void kruskal(struct Edge edges[], int numVertices, int numEdges) {
+    struct Subset subsets[numVertices];
+    for (int i = 0; i < numVertices; i++) {
         subsets[i].parent = i;
         subsets[i].rank = 0;
     }
 
-    qsort(edges, E, sizeof(edges[0]), compareEdges);
+    qsort(edges, numEdges, sizeof(edges[0]), compareEdges);
 
     printf("Minimum Spanning Tree:\n");
 
     int edgesInMST = 0;
-    for (int i = 0; i < E && edgesInMST < V - 1; i++) {
+    for (int i = 0; i < numEdges && edgesInMST < numVertices - 1; i++) {
         int x = find(subsets, edges[i].src);
         int y = find(subsets, edges[i].dest);
 
