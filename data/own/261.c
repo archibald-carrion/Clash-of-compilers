@@ -1,10 +1,23 @@
 // 261.c
 // Operaciones bitwise en un bucle (variación 8)
-int main() {
-  volatile unsigned int data = 0xFEEDFACE;
+#include <stdlib.h>
+
+unsigned int operaciones_bitwise_var8() {
+  unsigned int* data = malloc(sizeof(unsigned int));
+  if (!data) return 0;
+
+  *data = 0xFEEDFACE;
   for (long long i = 0; i < 2300000; ++i) {
-    data = (data & 0xFFFFFF00) | ((data + (unsigned int)i) % 0xFF);
-    data = (data >> (i % 4)) | (data << (32 - (i % 4)));
+    *data = ((*data) & 0xFFFFFF00) | (((*data) + (unsigned int)i) % 0xFF);
+    *data = ((*data) >> (i % 4)) | ((*data) << (32 - (i % 4)));
   }
-  return (int)(data % 256);
+
+  unsigned int result = (*data) % 256;
+  free(data);
+  return result;
+}
+
+int main() {
+  operaciones_bitwise_var8();
+  return 0;
 }

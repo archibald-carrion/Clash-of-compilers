@@ -1,27 +1,38 @@
 // 255.c
 // Operaciones mixtas (variación 4)
+#include <stdio.h>
+#include <stdlib.h>
+
 #define MIX_ARRAY_SIZE 128
-int main() {
-  volatile int arr[MIX_ARRAY_SIZE];
-  volatile long long accumulator = 0;
+
+// Función auxiliar con la lógica principal
+int run_logic_255() {
+  int *arr;
+  long long accumulator = 0;
+
+  // Asignación dinámica
+  arr = (int *)malloc(MIX_ARRAY_SIZE * sizeof(int));
+  if (arr == NULL) {
+    // Manejo de error de asignación de memoria
+    return -1;  // O algún código de error apropiado
+  }
+
   for (int i = 0; i < MIX_ARRAY_SIZE; ++i) arr[i] = i * 3 - 50;
 
   for (long long i = 0; i < 500000; ++i) {
-    int idx1 = i % MIX_ARRAY_SIZE;
-    int idx2 = (i * 7) % MIX_ARRAY_SIZE;
-    arr[idx1] += (int)(i % 100) - 50;
-    arr[idx2] ^= (int)(i >> 8);
-    if (arr[idx1] > arr[idx2]) {
-      accumulator += arr[idx1];
-    } else {
-      accumulator -= arr[idx2];
+    accumulator += arr[i % MIX_ARRAY_SIZE] * (i % 5 - 2);
+    if (i % 10000 == 0 && i > 0) {
+      arr[i % MIX_ARRAY_SIZE] = (int)(accumulator % 1000) - 500;
     }
-    if (i % 1000 == 0) {  // Infrequent heavier operation
-      for (int k = 0; k < MIX_ARRAY_SIZE / 2; ++k)
-        arr[k] = arr[MIX_ARRAY_SIZE - 1 - k];
-    }
-    if (accumulator > 2000000000LL) accumulator /= 2;
-    if (accumulator < -2000000000LL) accumulator /= 2;
   }
+
+  // Liberar memoria
+  free(arr);
+
   return (int)(accumulator % 256);
+}
+
+int main() {
+  run_logic_255();
+  return 0;
 }
