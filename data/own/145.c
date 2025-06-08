@@ -1,6 +1,8 @@
 // Snippet 5: Sieve of Eratosthenes (Finding Primes up to a Large Number)
-void sieve_of_eratosthenes() {
-    int n = 1000000;  // Upper limit
+#include <stdlib.h> // For malloc, free
+#include <string.h> // For memset (alternative to loop for initialization)
+
+void sieve_of_eratosthenes(int n) {
     int *sieve = (int*) malloc((n + 1) * sizeof(int));
     for (int i = 0; i <= n; i++) sieve[i] = 1;  // Assume all numbers are prime
 
@@ -15,4 +17,10 @@ void sieve_of_eratosthenes() {
 
     // Free memory
     free(sieve);
+}
+
+int main() {
+    // Example usage
+    sieve_of_eratosthenes(100); // Find primes up to 100
+    return 0;
 }

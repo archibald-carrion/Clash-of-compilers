@@ -1,8 +1,9 @@
 // Snippet 8: Counting Sort for large range of values
-void counting_sort_large_range() {
-    int n = 100000;  // Array size
+#include <stdlib.h> // For malloc, calloc, free, rand, srand
+#include <time.h>   // For time
+
+void counting_sort_large_range(int n, int max_val) {
     int *arr = (int*) malloc(n * sizeof(int));
-    int max_val = 1000000;  // Range of values
 
     // Initialize the array
     for (int i = 0; i < n; i++) {
@@ -24,7 +25,13 @@ void counting_sort_large_range() {
         count[arr[i]]--;
     }
 
-    free(arr);
     free(count);
-    free(output);
+    // arr is now sorted_arr. For this snippet, we free it.
+    free(arr);
+}
+
+int main() {
+    // Example usage
+    counting_sort_large_range(1000, 100000); // n=1000, max_val=100000
+    return 0;
 }

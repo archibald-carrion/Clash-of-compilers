@@ -31,3 +31,8 @@ void n_queens() {
 
     free(board);
 }
+
+int main() {
+    n_queens();
+    return 0;
+}

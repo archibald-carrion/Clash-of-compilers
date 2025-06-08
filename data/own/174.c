@@ -1,3 +1,5 @@
+#include <stdlib.h> // For malloc, free, rand, srand
+#include <time.h>   // For time
 
 // Function to merge two subarrays
 void merge(int *arr, int left, int mid, int right) {
@@ -44,4 +46,21 @@ void merge_sort() {
     merge_sort_recursive(arr, 0, n - 1);
 
     free(arr);
+}
+
+void merge_sort_main(int n_elements) { // Renamed from merge_sort to avoid conflict with recursive helper
+    int *arr = (int*) malloc(n_elements * sizeof(int));
+    srand(time(NULL));
+    for(int i=0; i<n_elements; ++i) arr[i] = rand() % (n_elements * 10);
+
+    if (n_elements > 0) {
+        merge_sort_recursive(arr, 0, n_elements - 1);
+    }
+    
+    free(arr);
+}
+
+int main() {
+    merge_sort_main(1000); // Sort an array of 1000 elements
+    return 0;
 }

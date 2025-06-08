@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 
     // Snippet 7: Newton-Raphson method for finding roots
     void newton_raphson() {
@@ -17,4 +20,8 @@
             x = x_new;
         }
     }
-    
+
+int main() {
+    newton_raphson();
+    return 0;
+}

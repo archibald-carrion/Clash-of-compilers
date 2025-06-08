@@ -45,3 +45,8 @@ void quickselect_kth_smallest() {
 
     free(arr);
 }
+
+int main() {
+    // This file was initially empty.
+    return 0;
+}

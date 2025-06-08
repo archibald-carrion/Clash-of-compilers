@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 
     // Snippet 3: Jacobi iteration for solving Ax = b
     void jacobi_iteration() {
@@ -41,4 +43,8 @@
         free(x);
         free(x_new);
     }
-    
+
+int main() {
+    jacobi_iteration();
+    return 0;
+}

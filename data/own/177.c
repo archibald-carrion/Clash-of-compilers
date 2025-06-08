@@ -32,3 +32,8 @@ void dfs_graph() {
     }
     free(graph);
 }
+
+int main() {
+    dfs_graph();
+    return 0;
+}

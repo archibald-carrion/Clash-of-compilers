@@ -1,33 +1,52 @@
 // Snippet 4: Knapsack Problem using Dynamic Programming
-void knapsack() {
-    int n = 1000;  // Number of items
-    int capacity = 1000;  // Knapsack capacity
-    int *weights = (int*) malloc(n * sizeof(int));
-    int *values = (int*) malloc(n * sizeof(int));
-    int **dp = (int**) malloc((n + 1) * sizeof(int*));
+#include <stdlib.h> // For malloc, free, calloc, rand, srand
+#include <time.h>   // For time
 
-    for (int i = 0; i <= n; i++) {
-        dp[i] = (int*) malloc((capacity + 1) * sizeof(int));
+int knapsack(int n_items, int W_capacity) { // Renamed n to n_items, W to W_capacity
+    int *weights = (int*) malloc(n_items * sizeof(int));
+    int *values = (int*) malloc(n_items * sizeof(int));
+    
+    // Initialize dp table with calloc (initializes to 0)
+    int **dp = (int**) malloc((n_items + 1) * sizeof(int*));
+    for (int i = 0; i <= n_items; i++) {
+        dp[i] = (int*) calloc((W_capacity + 1), sizeof(int));
     }
 
-    // Knapsack DP algorithm
-    for (int i = 0; i <= n; i++) {
-        for (int w = 0; w <= capacity; w++) {
-            if (i == 0 || w == 0) {
-                dp[i][w] = 0;
-            } else if (weights[i - 1] <= w) {
-                dp[i][w] = (values[i - 1] + dp[i - 1][w - weights[i - 1]] > dp[i - 1][w]) ?
-                            (values[i - 1] + dp[i - 1][w - weights[i - 1]]) : dp[i - 1][w];
-            } else {
-                dp[i][w] = dp[i - 1][w];
+    srand(time(NULL));
+    for(int i=0; i<n_items; ++i) {
+        weights[i] = rand() % 100 + 1; // Example weights
+        values[i] = rand() % 100 + 1;  // Example values
+    }
+
+
+    for (int i = 1; i <= n_items; i++) {
+        for (int w = 1; w <= W_capacity; w++) {
+            if (weights[i-1] <= w) { // Item i-1 can be included
+                int val_if_included = values[i-1] + dp[i-1][w - weights[i-1]];
+                if (val_if_included > dp[i-1][w]) {
+                    dp[i][w] = val_if_included;
+                } else {
+                    dp[i][w] = dp[i-1][w];
+                }
+            } else { // Item i-1 cannot be included
+                dp[i][w] = dp[i-1][w];
             }
         }
     }
+    
+    int result = dp[n_items][W_capacity];
 
-    free(weights);
-    free(values);
-    for (int i = 0; i <= n; i++) {
+    for (int i = 0; i <= n_items; i++) {
         free(dp[i]);
     }
     free(dp);
+    free(weights);
+    free(values);
+    return result;
+}
+
+int main() {
+    // Example usage
+    knapsack(100, 500); // 100 items, capacity 500
+    return 0;
 }

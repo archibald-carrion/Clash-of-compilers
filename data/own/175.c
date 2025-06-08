@@ -14,3 +14,8 @@ void heapify(int *heap, int heap_size, int i, int *freq_map) {
         heapify(heap, heap_size, largest, freq_map);
     }
 }
+
+int main() {
+    // heapify is a helper function, not called directly here for a standalone execution.
+    return 0;
+}

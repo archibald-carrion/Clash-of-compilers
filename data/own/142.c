@@ -1,6 +1,7 @@
 // Snippet 2: Floyd-Warshall Algorithm for All-Pairs Shortest Path
-void floyd_warshall() {
-    int n = 1000;  // Number of nodes
+#include <stdlib.h> // For malloc, free
+
+void floyd_warshall(int n) {
     int **dist = (int**) malloc(n * sizeof(int*));
     for (int i = 0; i < n; i++) {
         dist[i] = (int*) malloc(n * sizeof(int));
@@ -33,4 +34,10 @@ void floyd_warshall() {
         free(dist[i]);
     }
     free(dist);
+}
+
+int main() {
+    // Example usage
+    floyd_warshall(5); // n=5 (number of vertices)
+    return 0;
 }

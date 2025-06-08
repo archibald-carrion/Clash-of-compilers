@@ -53,3 +53,8 @@ void bfs_graph() {
     }
     free(graph);
 }
+
+int main() {
+    bfs_graph();
+    return 0;
+}

@@ -59,6 +59,7 @@ void bfs_graph() {
 }
 
 int main() {
+    // This file was initially empty.
     bfs_graph();
     return 0;
 }

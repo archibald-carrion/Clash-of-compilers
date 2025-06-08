@@ -20,3 +20,8 @@ void fft() {
     free(real);
     free(imag);
 }
+
+int main() {
+    fft();
+    return 0;
+}

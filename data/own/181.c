@@ -64,3 +64,8 @@ void strassen_matrix_multiply() {
     free(B);
     free(C);
 }
+
+int main() {
+    strassen_matrix_multiply();
+    return 0;
+}

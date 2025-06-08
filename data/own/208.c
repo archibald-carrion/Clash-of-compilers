@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -43,4 +42,3 @@ int main() {
     longest_increasing_subsequence();
     return 0;
 }
-    

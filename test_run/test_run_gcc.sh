@@ -56,7 +56,7 @@ for file in "${c_files[@]}"; do
         disk_access=""
         avg_time=""
         # Compile with gcc, output to bin directory
-        if gcc "$file" -o "$exe_path" -O2; then
+        if gcc "$file" -o "$exe_path" -O2 -lm; then
             # Check if executable exists and is executable
             if [ -x "$exe_path" ]; then
                 exec_size=$(ls -lh "$exe_path" | awk '{print $5}')

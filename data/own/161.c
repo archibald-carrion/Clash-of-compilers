@@ -15,3 +15,8 @@ void monte_carlo_pi() {
 
     double pi = 4.0 * count / n;
 }
+
+int main() {
+    monte_carlo_pi();
+    return 0;
+}

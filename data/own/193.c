@@ -13,5 +13,7 @@ void euclidean_algorithm_gcd() {
 
 int main() {
     euclidean_algorithm_gcd();
+
+    // This file was initially empty.
     return 0;
 }

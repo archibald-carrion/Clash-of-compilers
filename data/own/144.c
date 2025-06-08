@@ -1,4 +1,6 @@
 // Snippet 4: Matrix Multiplication with Strassen's Algorithm
+#include <stdlib.h> // For malloc, free
+
 // Matrix multiplication with Strassen's Algorithm (simplified for readability)
 void strassen(int **A, int **B, int **C, int n) {
     if (n <= 1) {
@@ -9,8 +11,7 @@ void strassen(int **A, int **B, int **C, int n) {
     // Recursive calls to multiply sub-matrices and add them
 }
 
-void strassens_matrix_multiply() {
-    int n = 512;  // Matrix size
+void strassens_matrix_multiply(int n) {
     int **A = (int**) malloc(n * sizeof(int*));
     int **B = (int**) malloc(n * sizeof(int*));
     int **C = (int**) malloc(n * sizeof(int*));
@@ -33,4 +34,10 @@ void strassens_matrix_multiply() {
     free(A);
     free(B);
     free(C);
+}
+
+int main() {
+    // Example usage (n must be a power of 2 for typical Strassen's)
+    strassens_matrix_multiply(4); // n=4
+    return 0;
 }

@@ -1,9 +1,9 @@
 // Snippet 8: Counting Sort Algorithm
-void counting_sort() {
-    int n = 100000;  // Array size
+#include <stdlib.h> // For malloc, calloc, free
+
+void counting_sort(int n, int max_val) {
     int *arr = (int*) malloc(n * sizeof(int));
 
-    int max_val = 1000;  // Range of numbers
     int *count = (int*) calloc(max_val + 1, sizeof(int));
     int *output = (int*) malloc(n * sizeof(int));
 
@@ -19,7 +19,14 @@ void counting_sort() {
         count[arr[i]]--;
     }
 
-    free(arr);
     free(count);
-    free(output);
+    // arr is now sorted_arr, so it should be used or returned, not freed here if it's the output.
+    // For the purpose of this snippet as a standalone, we'll free it.
+    free(arr); 
+}
+
+int main() {
+    // Example usage
+    counting_sort(100, 1000); // n=100, max_val=1000
+    return 0;
 }

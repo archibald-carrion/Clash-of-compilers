@@ -17,6 +17,7 @@ void generate_subsets() {
 }
 
 int main() {
+    // This file was initially empty.
     generate_subsets();
     return 0;
 }

@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 // Snippet 4: Binary Search (Iterative)
 void binary_search() {
     int n = 1000;
@@ -24,4 +27,9 @@ void binary_search() {
     }
 
     free(arr);
+}
+
+int main() {
+    binary_search();
+    return 0;
 }

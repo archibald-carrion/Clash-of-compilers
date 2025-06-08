@@ -1,4 +1,3 @@
-
 // Snippet 3: Counting Set Bits (Hamming Weight)
 void count_set_bits() {
     int n = 1000000;  // Number of integers to check
@@ -11,4 +10,9 @@ void count_set_bits() {
             num >>= 1;
         }
     }
+}
+
+int main() {
+    count_set_bits();
+    return 0;
 }

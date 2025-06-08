@@ -1,6 +1,8 @@
+#include <stdlib.h> // For malloc, free
+#include <stdio.h>  // For printf (if you were to add prints)
 
-    // Snippet 1: Matrix multiplication (Naive approach)
-    void matrix_multiply() {
+// Snippet 1: Matrix multiplication (Naive approach)
+void matrix_multiply() {
         int n = 1000;  // Size of the matrix
         int **A, **B, **C;
         
@@ -35,4 +37,8 @@
         free(B);
         free(C);
     }
-    
+
+int main() {
+    matrix_multiply();
+    return 0;
+}

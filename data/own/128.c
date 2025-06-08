@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 // Snippet 8: Bubble Sort
 void bubble_sort() {
     int n = 1000;
@@ -15,4 +18,9 @@ void bubble_sort() {
     }
 
     free(arr);
+}
+
+int main() {
+    bubble_sort();
+    return 0;
 }

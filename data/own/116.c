@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 
     // Snippet 6: LU Decomposition for solving linear systems
     void lu_decomposition() {
@@ -42,4 +44,8 @@
         free(L);
         free(U);
     }
-    
+
+int main() {
+    lu_decomposition();
+    return 0;
+}

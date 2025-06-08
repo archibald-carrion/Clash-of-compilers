@@ -1,6 +1,7 @@
 // Snippet 7: Largest Contiguous Subarray Sum (Kadane's Algorithm)
-void kadane_algorithm() {
-    int n = 1000000;  // Array size
+#include <stdlib.h> // For malloc, free
+
+int kadane_algorithm(int n) {
     int *arr = (int*) malloc(n * sizeof(int));
 
     int max_sum = arr[0], current_sum = arr[0];
@@ -10,4 +11,11 @@ void kadane_algorithm() {
     }
 
     free(arr);
+    return max_sum;
+}
+
+int main() {
+    // Example usage
+    kadane_algorithm(10); // n=10 (size of array)
+    return 0;
 }

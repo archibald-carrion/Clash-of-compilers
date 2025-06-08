@@ -1,64 +1,89 @@
-#include <stdlib.h> // Added for malloc and free
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
-// Helper function to swap two elements
-void swap(int *a, int *b) {
-    int temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
-// Optimized partition for Quick Sort - moved to global scope
-int partition(int *arr, int low, int high) {
-    // Check for invalid range to prevent out-of-bounds access if high is too small
-    if (low > high || high < 0) { 
-        // Or handle error appropriately, this might indicate an issue with initial call or recursion
-        return low; // Or some other indicator of an issue
-    }
-    int pivot = arr[high];
-    int i = low - 1;
-    for (int j = low; j < high; j++) {
-        if (arr[j] <= pivot) {
-            i++;
-            swap(&arr[i], &arr[j]);
-        }
-    }
-    swap(&arr[i + 1], &arr[high]);
-    return i + 1;
-}
-
-// Recursive Quick Sort function - moved to global scope
-void quick_sort_recursive(int *arr, int low, int high) {
-    if (low < high) {
-        int pi = partition(arr, low, high);
-        // Ensure pi is within bounds before recursing
-        if (pi > low) { // Check to prevent pi-1 from being out of bounds if pi is low
-            quick_sort_recursive(arr, low, pi - 1);
-        }
-        if (pi < high) { // Check to prevent pi+1 from being out of bounds if pi is high
-             quick_sort_recursive(arr, pi + 1, high);
-        }
-    }
-}
-
-// Snippet 172: Large-Scale Quick Sort with Optimized Partition
-void quick_sort_optimized() {
-    int n = 1000000;  // Array size
-    if (n <= 0) return; // Handle non-positive size
-    int *arr = (int*) malloc(n * sizeof(int));
-    if (arr == NULL) {
-        // Handle allocation failure
+// New function: Matrix Addition
+// Much faster than quicksort for large datasets
+void matrix_addition() {
+    // Use smaller dimensions for better performance
+    int rows = 1000;
+    int cols = 1000;
+    
+    // Allocate memory for matrices
+    int **matrix1 = (int**) malloc(rows * sizeof(int*));
+    int **matrix2 = (int**) malloc(rows * sizeof(int*));
+    int **result = (int**) malloc(rows * sizeof(int*));
+    
+    if (!matrix1 || !matrix2 || !result) {
+        perror("Failed to allocate memory for matrices");
+        // Free any allocated memory
+        if (matrix1) free(matrix1);
+        if (matrix2) free(matrix2);
+        if (result) free(result);
         return;
     }
     
-    // Initialize array with some values if needed for testing
-    // For example:
-    // for(int i=0; i<n; ++i) arr[i] = n - i;
+    // Allocate memory for each row
+    for (int i = 0; i < rows; i++) {
+        matrix1[i] = (int*) malloc(cols * sizeof(int));
+        matrix2[i] = (int*) malloc(cols * sizeof(int));
+        result[i] = (int*) malloc(cols * sizeof(int));
+        
+        if (!matrix1[i] || !matrix2[i] || !result[i]) {
+            perror("Failed to allocate memory for matrix row");
+            
+            // Free previously allocated rows
+            for (int j = 0; j <= i; j++) {
+                if (matrix1[j]) free(matrix1[j]);
+                if (matrix2[j]) free(matrix2[j]);
+                if (result[j]) free(result[j]);
+            }
+            
+            // Free main arrays
+            free(matrix1);
+            free(matrix2);
+            free(result);
+            return;
+        }
+    }
+    
+    // Initialize matrices with random values
+    srand(time(NULL));
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            matrix1[i][j] = rand() % 100;
+            matrix2[i][j] = rand() % 100;
+        }
+    }
+    
+    // Perform matrix addition
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            result[i][j] = matrix1[i][j] + matrix2[i][j];
+        }
+    }
+    
+    // Print a small sample of the result (optional)
+    printf("Sample of result matrix (top-left corner):\n");
+    for (int i = 0; i < 3 && i < rows; i++) {
+        for (int j = 0; j < 3 && j < cols; j++) {
+            printf("%d ", result[i][j]);
+        }
+        printf("\n");
+    }
+    
+    // Free all allocated memory
+    for (int i = 0; i < rows; i++) {
+        free(matrix1[i]);
+        free(matrix2[i]);
+        free(result[i]);
+    }
+    free(matrix1);
+    free(matrix2);
+    free(result);
+}
 
-
-    // partition function was here
-    // quick_sort_recursive function was here
-
-    quick_sort_recursive(arr, 0, n - 1);
-
-    free(arr);
+int main() {
+    matrix_addition();
+    return 0;
 }

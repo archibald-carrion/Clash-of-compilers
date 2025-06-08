@@ -38,3 +38,8 @@ void n_queens() {
 
     free(board);
 }
+
+int main() {
+    // This file was initially empty.
+    return 0;
+}

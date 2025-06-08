@@ -30,3 +30,8 @@ void matrix_exponentiation() {
         exponent /= 2;
     }
 }
+
+int main() {
+    matrix_exponentiation();
+    return 0;
+}

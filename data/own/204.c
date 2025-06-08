@@ -1,67 +1,71 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h> // For M_PI, cos, sin
-#include <time.h>
+#include <math.h>   // For sin, cos
+#include <stdlib.h> // For malloc, free
+#include <stdio.h>  // For printf (if debugging)
 
+// Define M_PI if not available in math.h
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
 
-// Helper function for fft_signal_processing, moved to file scope
-static void s194_fft_recursive(double *real, double *imag, int n) {
-    if (n <= 1) return;
-    int mid = n / 2;
-    double *even_real = (double*) malloc(mid * sizeof(double));
-    double *even_imag = (double*) malloc(mid * sizeof(double));
-    double *odd_real = (double*) malloc(mid * sizeof(double));
-    double *odd_imag = (double*) malloc(mid * sizeof(double));
+// Define a complex number type if not available
+typedef struct {
+    double real;
+    double imag;
+} complex_t;
 
-    for (int i = 0; i < mid; i++) {
-        even_real[i] = real[2 * i];
-        even_imag[i] = imag[2 * i];
-        odd_real[i] = real[2 * i + 1];
-        odd_imag[i] = imag[2 * i + 1];
+// Recursive FFT function (Cooley-Tukey)
+void s194_fft_recursive(complex_t *x, int N) {
+    if (N <= 1) return;
+
+    // Divide
+    int k;
+    complex_t *even = (complex_t*) malloc(N / 2 * sizeof(complex_t));
+    complex_t *odd = (complex_t*) malloc(N / 2 * sizeof(complex_t));
+    for (k = 0; k < N / 2; k++) {
+        even[k] = x[k * 2];
+        odd[k] = x[k * 2 + 1];
     }
 
-    s194_fft_recursive(even_real, even_imag, mid);
-    s194_fft_recursive(odd_real, odd_imag, mid);
+    // Conquer
+    s194_fft_recursive(even, N / 2);
+    s194_fft_recursive(odd, N / 2);
 
-    for (int i = 0; i < mid; i++) {
-        double cos_val = cos(2 * M_PI * i / n);
-        double sin_val = sin(2 * M_PI * i / n);
-        double t_real = cos_val * odd_real[i] - sin_val * odd_imag[i];
-        double t_imag = sin_val * odd_real[i] + cos_val * odd_imag[i];
+    // Combine
+    for (k = 0; k < N / 2; k++) {
+        // Calculate twiddle factor using separate sin and cos calls
+        double angle = 2.0 * M_PI * k / N;
+        double cosVal = cos(angle);
+        double sinVal = sin(angle);
+        
+        double t_real = cosVal * odd[k].real + sinVal * odd[k].imag;
+        double t_imag = -sinVal * odd[k].real + cosVal * odd[k].imag;
 
-        real[i] = even_real[i] + t_real;
-        imag[i] = even_imag[i] + t_imag;
-        real[i + mid] = even_real[i] - t_real;
-        imag[i + mid] = even_imag[i] - t_imag;
+        x[k].real = even[k].real + t_real;
+        x[k].imag = even[k].imag + t_imag;
+        x[k + N / 2].real = even[k].real - t_real;
+        x[k + N / 2].imag = even[k].imag - t_imag;
     }
 
-    free(even_real);
-    free(even_imag);
-    free(odd_real);
-    free(odd_imag);
+    free(even);
+    free(odd);
 }
 
-// Snippet 194: FFT (Fast Fourier Transform) for Signal Processing
 void fft_signal_processing() {
-    int n = 1024;  // Signal length (must be a power of 2)
-    double *real = (double*) malloc(n * sizeof(double));
-    double *imag = (double*) malloc(n * sizeof(double));
+    int N = 1024; // Size of the FFT, must be a power of 2
+    complex_t *signal = (complex_t*) malloc(N * sizeof(complex_t));
 
-    // Initialize the real and imaginary parts with values
-    for (int i = 0; i < n; i++) {
-        real[i] = cos(2 * M_PI * i / n);
-        imag[i] = sin(2 * M_PI * i / n);
+    // Example: Create a simple signal (e.g., sum of sines)
+    for (int i = 0; i < N; i++) {
+        signal[i].real = sin(2 * M_PI * i / N * 5) + 0.5 * sin(2 * M_PI * i / N * 10); // Frequencies 5 and 10
+        signal[i].imag = 0.0;
     }
 
-    // Implement FFT (simplified)
-    // (Actual recursive call is now to s194_fft_recursive)
-    s194_fft_recursive(real, imag, n);
+    s194_fft_recursive(signal, N);
 
-    free(real);
-    free(imag);
+    // Output or further processing of 'signal' (which now contains FFT result)
+    // For benchmark, just ensure the computation happens.
+
+    free(signal);
 }
 
 int main() {

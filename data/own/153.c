@@ -40,3 +40,8 @@ void bst_insertion() {
 
     inorder_traversal(root);
 }
+
+int main() {
+    bst_insertion();
+    return 0;
+}

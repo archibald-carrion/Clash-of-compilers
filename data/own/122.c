@@ -29,3 +29,8 @@ void linked_list_insertion() {
         current = next;
     }
 }
+
+int main() {
+    linked_list_insertion();
+    return 0;
+}

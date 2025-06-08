@@ -1,5 +1,4 @@
-
-    // Snippet 5: Runge-Kutta method for solving ODEs
+// Snippet 5: Runge-Kutta method for solving ODEs
     void runge_kutta() {
         double h = 0.01, t = 0.0, y = 1.0;
         double k1, k2, k3, k4;
@@ -15,4 +14,8 @@
             t += h;
         }
     }
-    
+
+int main() {
+    runge_kutta();
+    return 0;
+}

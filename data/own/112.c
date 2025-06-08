@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 
     // Snippet 2: Gaussian elimination
     void gaussian_elimination() {
@@ -41,4 +43,8 @@
         free(b);
         free(x);
     }
-    
+
+int main() {
+    gaussian_elimination();
+    return 0;
+}

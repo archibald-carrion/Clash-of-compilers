@@ -1,6 +1,10 @@
 // Snippet 6: Dijkstra's Algorithm for Shortest Path (with priority queue simulation)
-void dijkstra_with_priority_queue() {
-    int n = 1000;  // Number of nodes
+#include <stdlib.h> // For malloc, free, rand, srand
+#include <limits.h> // For INT_MAX
+#include <stdio.h>  // For printf (if debugging)
+#include <time.h>   // For time
+
+void dijkstra_with_priority_queue(int n, int src) {
     int **graph = (int**) malloc(n * sizeof(int*));
     for (int i = 0; i < n; i++) {
         graph[i] = (int*) malloc(n * sizeof(int));
@@ -18,7 +22,7 @@ void dijkstra_with_priority_queue() {
         }
     }
 
-    dist[0] = 0;  // Starting node
+    dist[src] = 0;  // Starting node
     // Simple priority queue simulation
     for (int i = 0; i < n - 1; i++) {
         int u = -1;
@@ -43,4 +47,10 @@ void dijkstra_with_priority_queue() {
     free(graph);
     free(dist);
     free(visited);
+}
+
+int main() {
+    // Example usage
+    dijkstra_with_priority_queue(5, 0); // n=5 vertices, source 0
+    return 0;
 }

@@ -1,6 +1,8 @@
 // Snippet 1: Longest Common Subsequence (LCS)
-void longest_common_subsequence() {
-    int n = 1000, m = 1000;  // Lengths of strings
+#include <stdlib.h> // For malloc, free
+#include <string.h> // For strlen (if X and Y were actual strings)
+
+int longest_common_subsequence(int n, int m) {
     char *X = (char*) malloc(n * sizeof(char));
     char *Y = (char*) malloc(m * sizeof(char));
 
@@ -21,11 +23,20 @@ void longest_common_subsequence() {
         }
     }
 
+    int result = L[n][m]; // Get the length of LCS
+
     // Free memory
     for (int i = 0; i <= n; i++) {
         free(L[i]);
     }
     free(L);
-    free(X);
+    free(X); // Free allocated memory for X and Y
     free(Y);
+    return result; // Return the result
+}
+
+int main() {
+    // Example usage
+    longest_common_subsequence(10, 12); // m=10, n=12 (lengths of X and Y)
+    return 0;
 }

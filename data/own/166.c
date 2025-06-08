@@ -1,35 +1,48 @@
 // Snippet 6: A* Search Algorithm for Pathfinding
-void astar_search() {
-    int n = 1000, m = 1000;  // Grid size
-    int **grid = (int**) malloc(n * sizeof(int*));
-    for (int i = 0; i < n; i++) {
-        grid[i] = (int*) malloc(m * sizeof(int));
+#include <stdlib.h> // For malloc, free, rand, srand
+#include <stdio.h>  // For printf (if debugging)
+#include <time.h>   // For time
+
+typedef struct {
+    int x, y;
+    int g, h, f; // g: cost from start, h: heuristic, f: g+h
+} Node;
+
+
+void astar_search(int n_rows, int m_cols) {
+    int **grid = (int**) malloc(n_rows * sizeof(int*));
+    for (int i = 0; i < n_rows; i++) {
+        grid[i] = (int*) malloc(m_cols * sizeof(int));
     }
 
-    // A* search algorithm
-    int *g_cost = (int*) malloc(n * m * sizeof(int));
-    int *f_cost = (int*) malloc(n * m * sizeof(int));
-    int *came_from = (int*) malloc(n * m * sizeof(int));
-
-    // Initialize grid and other arrays
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
+    // Example: Initialize grid (0 for open, 1 for obstacle)
+    // This is a placeholder for actual A* logic
+    srand(time(NULL));
+    for (int i = 0; i < n_rows; i++) {
+        for (int j = 0; j < m_cols; j++) {
             grid[i][j] = rand() % 2;  // 0 for open, 1 for obstacle
-            g_cost[i * m + j] = 1000000;  // High initial cost
-            f_cost[i * m + j] = 1000000;
-            came_from[i * m + j] = -1;  // No previous node
         }
     }
+    
+    // Placeholder for A* data structures (open list, closed list)
+    // Node* open_list = (Node*) malloc(n_rows * m_cols * sizeof(Node)); 
+    // Node* closed_list = (Node*) malloc(n_rows * m_cols * sizeof(Node));
 
-    // A* search implementation (simplified, without open/closed sets)
-    for (int i = 0; i < n * m; i++) {
-        if (g_cost[i] < f_cost[i]) {
-            // Explore neighbors and compute f_cost
-        }
+    // Actual A* logic would go here...
+    // This is highly simplified. A real A* involves priority queues, node expansion, etc.
+
+
+    // Free memory
+    // free(open_list);
+    // free(closed_list);
+    for (int i = 0; i < n_rows; i++) {
+        free(grid[i]);
     }
-
     free(grid);
-    free(g_cost);
-    free(f_cost);
-    free(came_from);
+}
+
+int main() {
+    // Example usage
+    astar_search(10, 10); // 10x10 grid
+    return 0;
 }

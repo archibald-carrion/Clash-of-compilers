@@ -35,3 +35,8 @@ void queue_operations() {
 
     free(queue.arr);
 }
+
+int main() {
+    queue_operations();
+    return 0;
+}

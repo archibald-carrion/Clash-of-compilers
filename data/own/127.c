@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 // Snippet 7: Merge Sort (Recursive)
 void merge(int *arr, int left, int mid, int right) {
     int n1 = mid - left + 1;
@@ -40,4 +43,9 @@ void merge_sort() {
     merge_sort_recursive(arr, 0, n - 1);
 
     free(arr);
+}
+
+int main() {
+    merge_sort();
+    return 0;
 }

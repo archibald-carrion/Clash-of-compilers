@@ -1,6 +1,8 @@
 // Snippet 10: Generate All Subsets of a Set
-void generate_subsets() {
-    int n = 20;  // Number of elements in the set
+#include <stdlib.h> // For malloc, free
+#include <stdio.h>  // For printf
+
+void generate_subsets(int n) {
     int *set = (int*) malloc(n * sizeof(int));
 
     // Generate all subsets (using bitmasking)
@@ -13,4 +15,10 @@ void generate_subsets() {
     }
 
     free(set);
+}
+
+int main() {
+    // Example usage
+    generate_subsets(3); // n=3 (number of elements in the set)
+    return 0;
 }

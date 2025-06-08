@@ -89,3 +89,8 @@ void count_inversions() {
 
     free(arr);
 }
+
+int main() {
+    count_inversions();
+    return 0;
+}

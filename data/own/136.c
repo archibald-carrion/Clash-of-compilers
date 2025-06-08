@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 // Snippet 6: Matrix Transposition (Large Matrix)
 void matrix_transpose() {
     int n = 1000, m = 1000;  // Matrix size
@@ -27,4 +30,9 @@ void matrix_transpose() {
     }
     free(matrix);
     free(transposed);
+}
+
+int main() {
+    matrix_transpose();
+    return 0;
 }

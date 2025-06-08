@@ -1,5 +1,8 @@
 // Snippet 4: Quick Sort Algorithm
 
+#include <stdio.h>
+#include <stdlib.h>
+
 void swap(int *a, int *b) {
     int temp = *a;
     *a = *b;
@@ -34,4 +37,9 @@ void quick_sort() {
     quick_sort_recursive(arr, 0, n - 1);
 
     free(arr);
+}
+
+int main() {
+    quick_sort();
+    return 0;
 }

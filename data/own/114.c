@@ -1,5 +1,4 @@
-
-    // Snippet 4: Trapezoidal rule for numerical integration
+// Snippet 4: Trapezoidal rule for numerical integration
     void trapezoidal_rule() {
         int n = 1000;  // Number of intervals
         double a = 0.0, b = 1.0, h, sum, result;
@@ -14,4 +13,8 @@
         
         result = h * sum;
     }
-    
+
+int main() {
+    trapezoidal_rule();
+    return 0;
+}

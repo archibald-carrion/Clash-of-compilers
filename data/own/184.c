@@ -80,6 +80,7 @@ void kosaraju_scc() {
             // For simplicity, we'll assume the second DFS is for traversal and doesn't rebuild a finish stack.
             // To avoid modifying 'top' in the second pass for finish_stack, we can pass a dummy 'top' or adjust dfs_kosaraju.
             // However, the original code reuses dfs, implying it's for traversal.
+            // The second DFS explores components.
             int dummy_top = -1; // Or pass NULL if dfs_kosaraju handles it, or a different DFS for 2nd pass.
                                 // For now, let's assume the original intent was to reuse the same DFS logic.
                                 // The second DFS explores components.
@@ -93,4 +94,9 @@ void kosaraju_scc() {
         free(graph[i]);
     }
     free(graph);
+}
+
+int main() {
+    kosaraju_scc();
+    return 0;
 }

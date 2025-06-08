@@ -1,6 +1,10 @@
 // Snippet 5: Solving a system of linear equations using Gaussian Elimination
-void gaussian_elimination_system() {
-    int n = 1000;  // Matrix size
+#include <stdlib.h> // For malloc, free, rand, srand
+#include <stdio.h>  // For printf (if debugging)
+#include <math.h>   // For fabs
+#include <time.h>   // For time
+
+void gaussian_elimination_system(int n) {
     double **A = (double**) malloc(n * sizeof(double*));
     double *b = (double*) malloc(n * sizeof(double));
     double *x = (double*) malloc(n * sizeof(double));
@@ -41,4 +45,10 @@ void gaussian_elimination_system() {
     free(A);
     free(b);
     free(x);
+}
+
+int main() {
+    // Example usage
+    gaussian_elimination_system(3); // n=3 (number of equations/variables)
+    return 0;
 }

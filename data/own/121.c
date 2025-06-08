@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 // Snippet 1: Insertion Sort
 void insertion_sort() {
     int n = 1000;
@@ -15,4 +17,9 @@ void insertion_sort() {
     }
 
     free(arr);
+}
+
+int main() {
+    insertion_sort();
+    return 0;
 }

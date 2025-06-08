@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 // Snippet 5: Fibonacci Sequence (Iterative)
 void fibonacci_iterative() {
     int n = 1000000;  // Calculate the first n Fibonacci numbers
@@ -10,4 +12,9 @@ void fibonacci_iterative() {
     }
 
     free(fib);
+}
+
+int main() {
+    fibonacci_iterative();
+    return 0;
 }

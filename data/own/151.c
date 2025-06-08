@@ -1,4 +1,9 @@
 // Snippet 1: Solving the Traveling Salesman Problem (TSP) using Brute Force
+#include <stdlib.h> // For malloc, free, rand, srand
+#include <stdio.h>  // For printf
+#include <limits.h> // For INT_MAX
+#include <time.h>   // For time
+
 // Forward declaration of swap (assumed to exist)
 void swap(int *a, int *b);
 
@@ -6,8 +11,7 @@ void swap(int *a, int *b);
 void permute(int *arr, int l, int r, int n, int **dist, int *min_path_length);
 
 // Snippet 1: Solving the Traveling Salesman Problem (TSP) using Brute Force
-void traveling_salesman() {
-    int n = 20;  // Number of cities
+void traveling_salesman(int n) {
     int **dist = (int**) malloc(n * sizeof(int*));
     for (int i = 0; i < n; i++) {
         dist[i] = (int*) malloc(n * sizeof(int));
@@ -21,11 +25,13 @@ void traveling_salesman() {
     }
 
     // Brute force to calculate all permutations and find the minimum route
-    int min_path_length = 1000000;
+    int min_path_length = INT_MAX;
     int *path = (int*) malloc(n * sizeof(int));
     for (int i = 0; i < n; i++) path[i] = i;
 
     permute(path, 0, n - 1, n, dist, &min_path_length);
+
+    printf("Minimum path length: %d\n", min_path_length);
 
     free(path);
     for (int i = 0; i < n; i++) {
@@ -57,4 +63,11 @@ void permute(int *arr, int l, int r, int n, int **dist, int *min_path_length) {
             swap(&arr[l], &arr[i]);  // Backtrack
         }
     }
+}
+
+int main() {
+    srand(time(NULL)); // Seed for random number generator
+    // Example usage
+    traveling_salesman(4); // n=4 cities. Warning: brute force TSP is very slow for larger n.
+    return 0;
 }

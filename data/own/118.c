@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 
     // Snippet 8: Bisection method for solving nonlinear equations
     void bisection() {
@@ -18,4 +21,8 @@
             }
         }
     }
-    
+
+int main() {
+    bisection();
+    return 0;
+}

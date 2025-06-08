@@ -1,3 +1,7 @@
+# include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 // Snippet 3: Reverse a String in place
 void reverse_string() {
     char str[] = "Hello, World!";
@@ -11,4 +15,9 @@ void reverse_string() {
         start++;
         end--;
     }
+}
+
+int main() {
+    reverse_string();
+    return 0;
 }

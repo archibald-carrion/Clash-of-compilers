@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -66,4 +65,3 @@ int main() {
     merge_sort_optimized();
     return 0;
 }
-    

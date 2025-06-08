@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 // Snippet 5: Stack Implementation (Push and Pop)
 struct Stack {
     int *arr;
@@ -26,4 +29,9 @@ void stack_operations() {
     int popped = pop(&stack);
 
     free(stack.arr);
+}
+
+int main() {
+    stack_operations();
+    return 0;
 }

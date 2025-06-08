@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 // Snippet 7: Simulate a Simple Queue using an Array
 // Helper functions for queue operations
 void enqueue(int *queue, int *rear, int n, int value) {
@@ -23,4 +25,9 @@ void simulate_queue() {
     }
 
     free(queue);
+}
+
+int main() {
+    simulate_queue();
+    return 0;
 }
