@@ -36,7 +36,7 @@ echo
 
 # Create results CSV file
 results_csv="benchmark_results_$(date +%Y%m%d_%H%M%S).csv"
-echo "filename,exec_size,max_mem_kb,disk_access,avg_time_sec" > "$results_csv"
+echo "filename,exec_size,max_mem_kb,avg_time_sec" > "$results_csv"
 
 # Create bin directory if it doesn't exist
 bin_dir="./bin"
@@ -53,7 +53,7 @@ for file in "${c_files[@]}"; do
         exe_path="$bin_dir/$basename_noext"
         exec_size=""
         max_mem=""
-        disk_access=""
+        #disk_access=""
         avg_time=""
         # Compile with gcc, output to bin directory
         if gcc "$file" -o "$exe_path" -O2 -lm; then
@@ -65,7 +65,7 @@ for file in "${c_files[@]}"; do
                     # %e = real time, %M = max mem, %I = fs inputs, %O = fs outputs
                     time_output=$( /usr/bin/time -f "%e,%M,%I,%O" "$exe_path" 2>&1 >/dev/null )
                     IFS=',' read -r real_time max_mem fs_inputs fs_outputs <<< "$time_output"
-                    disk_access=$((fs_inputs + fs_outputs))
+                    # disk_access=$((fs_inputs + fs_outputs))
                 else
                     # Fallback: use date for real time only
                     start_time=$(date +%s.%N)
@@ -87,7 +87,7 @@ for file in "${c_files[@]}"; do
             fi
         fi
         # Write CSV row (empty fields if not available)
-        echo "$filename,$exec_size,$max_mem,$disk_access,$avg_time" >> "$results_csv"
+        echo "$filename,$exec_size,$max_mem,$avg_time" >> "$results_csv"
     fi
 done
 
