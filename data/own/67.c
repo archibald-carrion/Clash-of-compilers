@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h> // <-- Agregado
 
 struct FibonacciNode {
     int key;
@@ -49,12 +50,27 @@ int extractMin(struct FibonacciHeap* heap) {
     int minKey = minNode->key;
 
     if (minNode->child != NULL) {
-        // Merge children into the root list
+        // Fusionar los hijos en la lista raíz
+        struct FibonacciNode* child = minNode->child;
+        struct FibonacciNode* start = child;
+        do {
+            struct FibonacciNode* next = child->right;
+            // Insertar el hijo en la lista raíz
+            child->left = heap->min;
+            child->right = heap->min->right;
+            heap->min->right->left = child;
+            heap->min->right = child;
+            // Desmarcar el hijo
+            child->marked = false;
+            child = next;
+        } while (child != start);
     }
 
     if (minNode->right == minNode) {
         heap->min = NULL;
     } else {
+        minNode->left->right = minNode->right;
+        minNode->right->left = minNode->left;
         heap->min = minNode->right;
     }
 

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h> // <-- Agregado
 
 #define V 5
 
@@ -14,6 +15,9 @@ struct Graph* createGraph(int V) {
     graph->adj = (int**)malloc(V * sizeof(int*));
     for (int i = 0; i < V; i++) {
         graph->adj[i] = (int*)malloc(V * sizeof(int));
+        for (int j = 0; j < V; j++) {
+            graph->adj[i][j] = 0; // <-- Inicialización
+        }
     }
     return graph;
 }

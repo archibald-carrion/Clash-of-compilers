@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <limits.h>
+#include <stdbool.h>
 
 #define V 6
 

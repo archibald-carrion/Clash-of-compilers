@@ -48,7 +48,7 @@ void kruskal(struct Graph* graph) {
 
     qsort(graph->edge, graph->E, sizeof(graph->edge[0]), compare);
 
-    for (int i = 0; e < V - 1; i++) {
+    for (int i = 0; i < graph->E && e < V - 1; i++) {
         struct Edge next_edge = graph->edge[i];
         int x = findParent(parent, next_edge.u);
         int y = findParent(parent, next_edge.v);

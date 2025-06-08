@@ -22,7 +22,7 @@ int minCoins(int coins[], int m, int V) {
             }
         }
     }
-    return dp[V];
+    return (dp[V] == INT_MAX) ? -1 : dp[V];
 }
 
 int main() {

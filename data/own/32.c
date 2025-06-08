@@ -9,7 +9,7 @@ int isArmstrong(int num) {
     }
     num = original;
     while (num != 0) {
-        sum += pow(num % 10, digits);
+        sum += (int)pow(num % 10, digits);
         num /= 10;
     }
     return sum == original;
