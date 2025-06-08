@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+int merge(int arr[], int temp[], int left, int mid, int right);
+
 int mergeAndCount(int arr[], int temp[], int left, int right) {
     if (left == right) return 0;
     int mid = (left + right) / 2;
