@@ -1,8 +1,27 @@
 ---
-title: "Análisis exploratorio - Arquitecturas y Compiladores"
-author: "Clash of Compilers Team"
+title: "Analisis Proyecto"
+author:
+- 'Estudiante 1: Archibald Carrion'
+- 'Estudiante 2: Milton Sojo'
+- 'Estudiante 3: Brandon Trigueros'
+- 'Estudiante 4: David Gonzalez'
 date: "`r Sys.Date()`"
-output: html_document
+output:
+  html_document:
+    toc: true
+    toc_depth: '2'
+    df_print: paged
+  pdf_document:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+subtitle: "CI0131 - Diseño de Experimentos I Ciclo 2025"
+header-includes:
+- \usepackage{float}
+- \floatplacement{figure}{H}
+editor_options:
+  markdown:
+    wrap: 72
 ---
 
 ```{r configuracion, warning=FALSE}
@@ -12,7 +31,9 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
 ## Preparación de datos
 
-En esta sección se preparan los datos para el análisis: cargamos las bibliotecas necesarias, importamos el archivo CSV y configuramos las variables del experimento.
+En esta sección se preparan los datos para el análisis: cargamos las
+bibliotecas necesarias, importamos el archivo CSV y configuramos las
+variables del experimento.
 
 ```{r cargar_librerias, warning=FALSE}
 # Carga de librerías necesarias para el análisis
@@ -23,7 +44,7 @@ library(readr)
 
 ```{r importar_datos, warning=FALSE}
 # Lectura del archivo CSV con los resultados del benchmark
-df = (read.csv(file.choose(), header=T, encoding = "UTF-8"))
+df = (read.csv("../data/execution/combined_data.csv", header=T, encoding = "UTF-8"))
 
 # Renombra y convierte variables
 df <- df %>%
@@ -37,7 +58,9 @@ df <- df %>%
 
 ## Aleatorización de datos
 
-Para garantizar la validez del análisis, aleatorizamos el orden de las observaciones para evitar efectos sistemáticos relacionados con el momento en que se tomaron las mediciones.
+Para garantizar la validez del análisis, aleatorizamos el orden de las
+observaciones para evitar efectos sistemáticos relacionados con el
+momento en que se tomaron las mediciones.
 
 ```{r aleatorizacion_datos, warning=FALSE}
 # Barajamos todo el dataframe para aleatorización real
@@ -50,7 +73,54 @@ df <- df %>%
   )
 ```
 
-Visualización de las primeras filas del dataframe después de la aleatorización:
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+Visualización de las primeras filas del dataframe después de la
+aleatorización:
 
 ```{r mostrar_datos, warning=FALSE}
 # Muestra las primeras filas del dataframe aleatorizado
@@ -59,7 +129,8 @@ head(df)
 
 ## Estadísticas descriptivas globales
 
-Calculamos estadísticas básicas para toda la muestra para entender la distribución general de los tiempos de ejecución.
+Calculamos estadísticas básicas para toda la muestra para entender la
+distribución general de los tiempos de ejecución.
 
 ```{r estadisticas_globales, warning=FALSE}
 # Cálculo de medidas estadísticas básicas para toda la muestra
@@ -78,13 +149,30 @@ global_stats <- df %>%
 print(global_stats)
 ```
 
-Las estadísticas muestran la distribución de los tiempos de ejecución en la muestra completa, observándose un tiempo medio de ejecución de `r round(global_stats$mean, 4)` segundos con una desviación estándar de `r round(global_stats$sd, 4)` segundos.
+Las estadísticas muestran la distribución de los tiempos de ejecución en
+la muestra completa, observándose un tiempo medio de ejecución de
+`r round(global_stats$mean, 4)` segundos con una desviación estándar de
+`r round(global_stats$sd, 4)` segundos.
+
+-   **Media**: ∼0.022 s, pero la **mediana** es mucho menor (∼0.009 s),
+    lo que señala una cola larga de valores grandes.
+
+<!-- -->
+
+-    El **mínimo negativo** (−0.050 s) es un artefacto de medición o un
+    error que habría que depurar.
+
+<!-- -->
+
+-    El **IQR** (desde Q1 hasta Q3) cubre valores muy bajos (1–10 ms),
+    mostrando que la mayoría de corridas son ultrarrápidas.
 
 ## Visualizaciones exploratorias globales
 
 ### Boxplot de tiempos de ejecución
 
-El siguiente boxplot muestra la distribución general de los tiempos de ejecución utilizando una escala logarítmica para manejar los outliers.
+El siguiente boxplot muestra la distribución general de los tiempos de
+ejecución utilizando una escala logarítmica para manejar los outliers.
 
 ```{r boxplot_global, warning=FALSE}
 # Boxplot global con escala logarítmica
@@ -97,9 +185,20 @@ ggplot(df, aes(y = response)) +
   )
 ```
 
+-   La **caja** se extiende aproximadamente de 10⁻³ s a 10⁻² s, con
+    mediana en ∼3×10⁻³ s.
+
+-   Los **bigotes** llegan hasta unos 10⁻¹ s; todo punto por encima se
+    marca como “outlier”, revelando ejecuciones muy lentas (hasta 2.6
+    s).
+
+-   La escala logarítmica permite comprimir la cola y visualizar bien la
+    distribución central.
+
 ### Histograma de tiempos de ejecución
 
-El histograma permite visualizar la distribución de frecuencias de los tiempos de ejecución usando escala logarítmica.
+El histograma permite visualizar la distribución de frecuencias de los
+tiempos de ejecución usando escala logarítmica.
 
 ```{r histograma_global, warning=FALSE}
 # Histograma con escala logarítmica
@@ -114,9 +213,58 @@ ggplot(df, aes(x = response)) +
   theme_minimal()
 ```
 
+**Distribución fuertemente sesgada:**
+
+Pico con más frecuencia en la zona de 10⁻³–10⁻² s.
+
+Caída rápida hacia tiempos más largos, con una larga cola de bajas
+frecuencias hasta ∼10⁰ s.
+
+El histograma confirma visualmente esa asimetría y la presencia de
+valores extremos.
+
+**Gráfico comparativo por compilador:**
+
+```{r}
+library(ggplot2)
+
+# Interacción: Media de response por compilador, coloreado por arquitectura
+ggplot(df, aes(x = compiler, y = response, color = architecture, group = architecture)) +
+  stat_summary(fun = mean, geom = "point", size = 3) +
+  stat_summary(fun = mean, geom = "line", size = 1) +
+  labs(
+    title = "Interacción: Media de avg_time_sec por Compilador",
+    x     = "Compilador",
+    y     = "Tiempo medio de ejecución (s)",
+    color = "Arquitectura"
+  ) +
+  theme_minimal()
+
+```
+
+**Gráfico comparativo por arquitectura:**
+
+```{r}
+# Interacción: Media de response por arquitectura, coloreado por compilador
+ggplot(df, aes(x = architecture, y = response, color = compiler, group = compiler)) +
+  stat_summary(fun = mean, geom = "point", size = 3) +
+  stat_summary(fun = mean, geom = "line", size = 1) +
+  labs(
+    title = "Interacción: Media de avg_time_sec por Arquitectura",
+    x     = "Arquitectura",
+    y     = "Tiempo medio de ejecución (s)",
+    color = "Compilador"
+  ) +
+  theme_minimal()
+```
+
+Indica que los efectos de los factores son **consistentes** a través de
+los niveles del otro factor
+
 ### Creación de variable de tratamiento
 
-Para análisis posterior, creamos una variable que combine arquitectura y compilador.
+Para análisis posterior, creamos una variable que combine arquitectura y
+compilador.
 
 ```{r crear_tratamiento, warning=FALSE}
 # Creamos la variable treatment para usarla en los gráficos
@@ -126,7 +274,8 @@ df <- df %>%
 
 ### Serie temporal de mediciones
 
-Este gráfico muestra cómo varían los tiempos de ejecución a lo largo del tiempo observado, diferenciando por tratamiento.
+Este gráfico muestra cómo varían los tiempos de ejecución a lo largo del
+tiempo observado, diferenciando por tratamiento.
 
 ```{r serie_temporal, warning=FALSE}
 # Serie temporal de tiempos de ejecución
@@ -143,9 +292,22 @@ ggplot(df, aes(x = time_observed, y = response, color = treatment)) +
   theme_minimal()
 ```
 
+**Cada punto es una corrida coloreada por tratamiento.**
+
+**Se observa claramente la separación horizontal:**
+
+Intel siempre entre ∼10⁻³ y 10⁻² s.
+
+Ryzen entre ∼10⁻² y 10⁻¹ s (o más).
+
+Esto refleja el efecto real de arquitectura sobre el rendimiento, no un
+fallo de aleatorización.
+
 ### Verificación de aleatorización
 
-Este gráfico permite verificar que la aleatorización ha funcionado correctamente, mostrando la distribución de tratamientos en el orden de observación.
+Este gráfico permite verificar que la aleatorización ha funcionado
+correctamente, mostrando la distribución de tratamientos en el orden de
+observación.
 
 ```{r verificar_aleatorizacion, warning=FALSE}
 # Gráfico para verificar la aleatorización
@@ -159,15 +321,30 @@ ggplot(df, aes(x = obs, y = treatment)) +
   theme_minimal()
 ```
 
-Para verificar la aleatorización generamos un gráfico de 'tiles' en el que cada raya vertical representa una corrida. Si la aleatorización fuese deficiente, veríamos bloques de un solo tratamiento juntos (por ejemplo, todas las corridas de intel×clang seguidas, luego las de ryzen×gcc, etc.).
+Para verificar la aleatorización generamos un gráfico de “rayas” en el
+que cada raya vertical representa una corrida. Si la aleatorización
+fuese deficiente, veríamos bloques de un solo tratamiento juntos (por
+ejemplo, todas las corridas de intel×clang seguidas, luego las de
+ryzen×gcc, etc.).
 
-En nuestro plot, cada uno de los cuatro tratamientos aparece disperso a lo largo de todo el eje-X, sin concentrarse en ningún tramo específico. Esto demuestra que hemos mezclado ("barajado") correctamente el orden de las corridas antes de tomarlas.
+En nuestro plot, cada uno de los cuatro tratamientos aparece disperso a
+lo largo de todo el eje-X, sin concentrarse en ningún tramo específico.
+Esto demuestra que hemos mezclado ("barajado") correctamente el orden de
+las corridas antes de tomarlas.
+
+-   El gráfico de “rayas” muestra cada tratamiento repartido de modo
+    uniforme sobre el eje X (índice de observación).
+
+-   No hay bloques continuos de un solo color: cada uno de los cuatro
+    tratamientos aparece intercalado a lo largo de todo el rango, lo que
+    confirma que el orden está bien aleatorizado.
 
 ## Análisis por factores individuales
 
 ### Estadísticas por arquitectura
 
-Analizamos las diferencias en tiempos de ejecución entre las arquitecturas Intel y Ryzen.
+Analizamos las diferencias en tiempos de ejecución entre las
+arquitecturas Intel y Ryzen.
 
 ```{r estadisticas_por_arquitectura, warning=FALSE}
 # Estadísticas descriptivas agrupadas por tipo de arquitectura
@@ -187,7 +364,15 @@ arch_stats <- df %>%
 print(arch_stats)
 ```
 
-Las estadísticas muestran diferencias en el rendimiento medio entre las arquitecturas Intel y Ryzen, con Intel mostrando un tiempo medio de `r round(arch_stats$mean[1], 4)` segundos frente a Ryzen con `r round(arch_stats$mean[2], 4)` segundos.
+Las estadísticas muestran diferencias en el rendimiento medio entre las
+arquitecturas Intel y Ryzen, con Intel mostrando un tiempo medio de
+`r round(arch_stats$mean[1], 4)` segundos frente a Ryzen con
+`r round(arch_stats$mean[2], 4)` segundos.
+
+-   Intel es, de media, **∼2.3× más rápido** que Ryzen.
+
+-   La variabilidad (sd) también es menor en Intel, indicando
+    ejecuciones más consistentes.
 
 ### Estadísticas por compilador
 
@@ -211,7 +396,13 @@ comp_stats <- df %>%
 print(comp_stats)
 ```
 
-Los resultados muestran diferencias en el rendimiento entre los compiladores, con Clang mostrando un tiempo medio de `r round(comp_stats$mean[1], 4)` segundos frente a GCC con `r round(comp_stats$mean[2], 4)` segundos.
+Los resultados muestran diferencias en el rendimiento entre los
+compiladores, con Clang mostrando un tiempo medio de
+`r round(comp_stats$mean[1], 4)` segundos frente a GCC con
+`r round(comp_stats$mean[2], 4)` segundos.
+
+**Clang rinde ligeramente mejor (∼11% más rápido en media) y con menor
+dispersión.**
 
 ## Análisis de interacciones entre factores
 
@@ -235,7 +426,13 @@ treat_stats <- df %>%
 print(treat_stats)
 ```
 
-El análisis combinado revela cómo cada compilador rinde en cada arquitectura, mostrando posibles interacciones entre estos factores.
+El análisis combinado revela cómo cada compilador rinde en cada
+arquitectura, mostrando posibles interacciones entre estos factores.
+
+-   Dentro de cada arquitectura, Clang siempre supera a GCC.
+
+-   La diferencia absoluta entre compiladores es menor en Intel (0.0024
+    s) que en Ryzen (0.0030 s), sugiriendo una interacción débil.
 
 ## Visualizaciones comparativas
 
@@ -260,7 +457,14 @@ ggplot(df, aes(x = architecture, y = response, fill = architecture)) +
   )
 ```
 
-El boxplot muestra visualmente las diferencias en distribución y variabilidad de los tiempos de ejecución entre las arquitecturas Intel y Ryzen.
+El boxplot muestra visualmente las diferencias en distribución y
+variabilidad de los tiempos de ejecución entre las arquitecturas Intel y
+Ryzen.
+
+-   En escala logarítmica, Intel muestra una caja muy compacta alrededor
+    de 10⁻³ s, mientras que la de Ryzen está desplazada hacia 10⁻² s y
+    es más ancha, confirmando diferencias tanto en posición como en
+    dispersión
 
 ### Comparación por compilador
 
@@ -283,11 +487,17 @@ ggplot(df, aes(x = compiler, y = response, fill = compiler)) +
   )
 ```
 
-Este boxplot permite visualizar las diferencias de rendimiento entre los compiladores Clang y GCC.
+Este boxplot permite visualizar las diferencias de rendimiento entre los
+compiladores Clang y GCC.
+
+-   Ambos compiladores dejan cajas centradas en ∼10⁻² s, pero la de GCC
+    es un poco más ancha y su mediana se sitúa ligeramente por debajo de
+    Clang, reflejando la media y varianza anteriores.
 
 ### Comparación de todos los tratamientos
 
-Finalmente, comparamos el rendimiento de todas las combinaciones de arquitectura y compilador.
+Finalmente, comparamos el rendimiento de todas las combinaciones de
+arquitectura y compilador.
 
 ```{r visualizacion_tratamientos, warning=FALSE}
 # Boxplot comparativo de todos los tratamientos
@@ -309,4 +519,19 @@ ggplot(df, aes(x = treatment, y = response, fill = treatment)) +
   )
 ```
 
-Este gráfico permite visualizar y comparar el rendimiento de cada combinación específica de arquitectura y compilador, revelando patrones que pueden no ser evidentes al analizar cada factor por separado.
+Este gráfico permite visualizar y comparar el rendimiento de cada
+combinación específica de arquitectura y compilador, revelando patrones
+que pueden no ser evidentes al analizar cada factor por separado.
+
+**Se observa el orden de rendimiento de más rápido a más lento:**
+
+1.  intel×clang (menor mediana)
+
+2.  intel×gcc
+
+3.  ryzen×clang
+
+4.  ryzen×gcc (mayor mediana y dispersión)
+
+Esta vista conjunta resalta cómo la combinación de factores impacta el
+tiempo de ejecución y permite planificar optimizaciones.
