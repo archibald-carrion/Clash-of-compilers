@@ -55,7 +55,7 @@ theme_set(theme_minimal() + theme(plot.title = element_text(hjust = 0.5)))
 
 ```{r load_data}
 # Cargar datos
-data <- read.csv("data/execution/combined_data.csv", stringsAsFactors = TRUE)
+data <- read.csv("../data/execution/combined_data.csv", stringsAsFactors = TRUE)
 
 # Mostrar estructura inicial de los datos
 str(data)
