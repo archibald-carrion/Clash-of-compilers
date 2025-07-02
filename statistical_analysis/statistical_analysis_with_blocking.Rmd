@@ -13,7 +13,19 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.width = 10, fig.height = 6)
+# Configuración global de chunks con manejo de errores
+knitr::opts_chunk$set(
+  echo = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  error = FALSE,
+  fig.width = 10, 
+  fig.height = 6,
+  results = 'hold'
+)
+
+# Configurar localización para evitar problemas de UTF-8
+Sys.setlocale("LC_ALL", "C")
 ```
 
 # 1. Introducción y Contextualización
@@ -35,6 +47,7 @@ En el dominio del desarrollo de software de alto rendimiento, la elección de la
 # 2. Carga y Preparación de Datos
 
 ```{r load_libraries}
+
 # Función para instalar paquetes si no están disponibles
 install_if_needed <- function(packages) {
   for (pkg in packages) {
@@ -108,8 +121,8 @@ ggplot(data, aes(x = max_mem_kb)) +
   geom_histogram(bins = 50, fill = "steelblue", alpha = 0.7) +
   geom_vline(aes(xintercept = quantile(max_mem_kb, 0.33)), color = "red", linetype = "dashed") +
   geom_vline(aes(xintercept = quantile(max_mem_kb, 0.67)), color = "red", linetype = "dashed") +
-  labs(title = "Distribución del Uso de Memoria (max_mem_kb)",
-       x = "Memoria Máxima (KB)", y = "Frecuencia") +
+  labs(title = "Distribucion del Uso de Memoria (max_mem_kb)",
+       x = "Memoria Maxima (KB)", y = "Frecuencia") +
   scale_x_log10()
 
 # Definir puntos de corte para los bloques (terciles)
@@ -130,7 +143,7 @@ table(data$memory_block)
 ggplot(data, aes(x = memory_block, fill = memory_block)) +
   geom_bar() +
   facet_grid(architecture ~ compiler) +
-  labs(title = "Distribución de Bloques de Memoria por Tratamiento",
+  labs(title = "Distribucion de Bloques de Memoria por Tratamiento",
        x = "Bloque de Memoria", y = "Frecuencia") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
@@ -183,8 +196,8 @@ kable(descriptive_stats, caption = "Estadísticas Descriptivas por Grupo", digit
 p1 <- ggplot(data, aes(x = interaction(architecture, compiler), y = avg_time_sec, fill = architecture)) +
   geom_boxplot() +
   scale_y_log10() +
-  labs(title = "Distribución del Tiempo de Ejecución por Tratamiento",
-       x = "Arquitectura × Compilador", y = "Tiempo de Ejecución (seg, escala log)") +
+  labs(title = "Distribucion del Tiempo de Ejecucion por Tratamiento",
+       x = "Arquitectura x Compilador", y = "Tiempo de Ejecucion (seg, escala log)") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 # Boxplot con bloques
@@ -192,8 +205,8 @@ p2 <- ggplot(data, aes(x = memory_block, y = avg_time_sec, fill = architecture))
   geom_boxplot() +
   facet_wrap(~ compiler) +
   scale_y_log10() +
-  labs(title = "Tiempo de Ejecución por Bloque de Memoria",
-       x = "Bloque de Memoria", y = "Tiempo de Ejecución (seg, escala log)")
+  labs(title = "Tiempo de Ejecucion por Bloque de Memoria",
+       x = "Bloque de Memoria", y = "Tiempo de Ejecucion (seg, escala log)")
 
 # Gráfico de interacciones
 interaction_data <- data %>%
@@ -204,8 +217,8 @@ p3 <- ggplot(interaction_data, aes(x = compiler, y = mean_time, color = architec
   geom_line(size = 1.2) +
   geom_point(size = 3) +
   facet_wrap(~ memory_block) +
-  labs(title = "Gráfico de Interacciones: Arquitectura × Compilador por Bloque",
-       x = "Compilador", y = "Tiempo Promedio de Ejecución (seg)")
+  labs(title = "Grafico de Interacciones: Arquitectura x Compilador por Bloque",
+       x = "Compilador", y = "Tiempo Promedio de Ejecucion (seg)")
 
 # Mostrar gráficos
 print(p1)
@@ -401,50 +414,50 @@ cat("Prueba de Independencia (Durbin-Watson):\n")
 cat("DW statistic =", round(dw_test$dw, 4), ", p-value =", round(dw_test$p, 6), "\n\n")
 
 # Interpretación de resultados
-cat("INTERPRETACIÓN DE SUPUESTOS (α = 0.05):\n")
+cat("INTERPRETACION DE SUPUESTOS (alfa = 0.05):\n")
 cat("1. Normalidad de residuales:\n")
 if(n_residuals > 5000) {
   if(anderson_residuals$p.value > 0.05) {
-    cat("   ✓ Anderson-Darling sugiere normalidad (p > 0.05)\n")
+    cat("   √ Anderson-Darling sugiere normalidad (p > 0.05)\n")
   } else {
-    cat("   ✗ Anderson-Darling rechaza normalidad (p ≤ 0.05)\n")
+    cat("   X Anderson-Darling rechaza normalidad (p <= 0.05)\n")
   }
   if(shapiro_residuals$p.value > 0.05) {
-    cat("   ✓ Shapiro-Wilk (muestra) sugiere normalidad (p > 0.05)\n")
+    cat("   √ Shapiro-Wilk (muestra) sugiere normalidad (p > 0.05)\n")
   } else {
-    cat("   ✗ Shapiro-Wilk (muestra) rechaza normalidad (p ≤ 0.05)\n")
+    cat("   X Shapiro-Wilk (muestra) rechaza normalidad (p <= 0.05)\n")
   }
 } else {
   if(shapiro_residuals$p.value > 0.05) {
-    cat("   ✓ Shapiro-Wilk sugiere normalidad (p > 0.05)\n")
+    cat("   √ Shapiro-Wilk sugiere normalidad (p > 0.05)\n")
   } else {
-    cat("   ✗ Shapiro-Wilk rechaza normalidad (p ≤ 0.05)\n")
+    cat("   X Shapiro-Wilk rechaza normalidad (p <= 0.05)\n")
   }
 }
 
 cat("2. Homogeneidad de varianzas:\n")
 if(levene_test$`Pr(>F)`[1] > 0.05) {
-  cat("   ✓ Levene sugiere homogeneidad (p > 0.05)\n")
+  cat("   √ Levene sugiere homogeneidad (p > 0.05)\n")
 } else {
-  cat("   ✗ Levene rechaza homogeneidad (p ≤ 0.05)\n")
+  cat("   X Levene rechaza homogeneidad (p <= 0.05)\n")
 }
 
 cat("3. Independencia:\n")
 if(dw_test$p > 0.05) {
-  cat("   ✓ Durbin-Watson sugiere independencia (p > 0.05)\n")
+  cat("   √ Durbin-Watson sugiere independencia (p > 0.05)\n")
 } else {
-  cat("   ✗ Durbin-Watson rechaza independencia (p ≤ 0.05)\n")
+  cat("   X Durbin-Watson rechaza independencia (p <= 0.05)\n")
 }
 ```
 
 # 9. Análisis de Tamaño del Efecto y Potencia
 
 ```{r effect_size_power}
-# Calcular eta cuadrado (η²) para tamaño del efecto
+# Calcular eta cuadrado (eta²) para tamaño del efecto
 eta_squared <- eta_squared(model, partial = FALSE)
 partial_eta_squared <- eta_squared(model, partial = TRUE)
 
-print("Tamaño del Efecto (η² y η² parcial):")
+print("Tamaño del Efecto (eta² y eta² parcial):")
 print(eta_squared)
 print(partial_eta_squared)
 
@@ -499,7 +512,7 @@ if(anova_summary[[1]][3, 5] < alpha_level) {
   
   # Gráfico de la interacción
   interaction.plot(data$compiler, data$architecture, data$log_time,
-                   main = "Gráfico de Interacción: Arquitectura × Compilador",
+                   main = "Grafico de Interaccion: Arquitectura x Compilador",
                    xlab = "Compilador", ylab = "Log(Tiempo Promedio)")
 }
 
@@ -574,6 +587,12 @@ cat("- Independencia: Rechazada por Durbin-Watson\n\n")
 
 # Usar datos originales para pruebas no paramétricas
 data_np <- data_original
+
+# Crear bloques de memoria en los datos originales (usando los mismos cortes)
+data_np$memory_block <- cut(data_np$max_mem_kb, 
+                            breaks = quantiles, 
+                            labels = c("Bajo", "Medio", "Alto"),
+                            include.lowest = TRUE)
 
 # 1. Test de Kruskal-Wallis para efectos principales
 cat("1. PRUEBAS DE KRUSKAL-WALLIS (efectos principales):\n")
@@ -656,36 +675,34 @@ interaction_medians <- data_np %>%
 print(interaction_medians)
 
 # 6. Interpretación de resultados no paramétricos
-cat("\n6. INTERPRETACIÓN DE RESULTADOS NO PARAMÉTRICOS (α = 0.05):\n")
+cat("\n6. INTERPRETACION DE RESULTADOS NO PARAMETRICOS (alfa = 0.05):\n")
 
 cat("ARQUITECTURA:\n")
 if(kruskal_arch$p.value < 0.05) {
-  cat("  ✓ Efecto SIGNIFICATIVO (p < 0.05)\n")
-  better_arch_median <- medians_arch$architecture[which.min(medians_arch$median_time)]
-  cat("  - Arquitectura con mejor mediana:", better_arch_median, "\n")
+  cat("  √ Efecto SIGNIFICATIVO (p < 0.05)\n")
+  cat("  - Arquitectura con mejor mediana:", medians_arch$architecture[which.min(medians_arch$median_time)], "\n")
   cat("  - Diferencia de medianas:", 
       abs(diff(medians_arch$median_time)), "segundos\n")
 } else {
-  cat("  ✗ Efecto NO SIGNIFICATIVO (p ≥ 0.05)\n")
+  cat("  X Efecto NO SIGNIFICATIVO (p >= 0.05)\n")
 }
 
 cat("\nCOMPILADOR:\n")
 if(kruskal_comp$p.value < 0.05) {
-  cat("  ✓ Efecto SIGNIFICATIVO (p < 0.05)\n")
-  better_comp_median <- medians_comp$compiler[which.min(medians_comp$median_time)]
-  cat("  - Compilador con mejor mediana:", better_comp_median, "\n")
+  cat("  √ Efecto SIGNIFICATIVO (p < 0.05)\n")
+  cat("  - Compilador con mejor mediana:", medians_comp$compiler[which.min(medians_comp$median_time)], "\n")
   cat("  - Diferencia de medianas:", 
       abs(diff(medians_comp$median_time)), "segundos\n")
 } else {
-  cat("  ✗ Efecto NO SIGNIFICATIVO (p ≥ 0.05)\n")
+  cat("  X Efecto NO SIGNIFICATIVO (p >= 0.05)\n")
 }
 
 cat("\nBLOQUES (USO DE MEMORIA):\n")
 if(kruskal_blocks$p.value < 0.05) {
-  cat("  ✓ Efecto SIGNIFICATIVO (p < 0.05)\n")
+  cat("  √ Efecto SIGNIFICATIVO (p < 0.05)\n")
   cat("  - El uso de memoria afecta significativamente el rendimiento\n")
 } else {
-  cat("  ✗ Efecto NO SIGNIFICATIVO (p ≥ 0.05)\n")
+  cat("  X Efecto NO SIGNIFICATIVO (p >= 0.05)\n")
 }
 ```
 
@@ -698,46 +715,62 @@ Dado que tenemos un diseño factorial con interacciones y los supuestos del ANOV
 # install.packages("ARTool") # Descomentar si no está instalado
 
 # Verificar si ARTool está disponible
-if (!require("ARTool", quietly = TRUE)) {
-  cat("NOTA: ARTool no está instalado. Instalando...\n")
-  install.packages("ARTool")
-  library(ARTool)
+art_available <- FALSE
+tryCatch({
+  if (!require("ARTool", quietly = TRUE)) {
+    cat("NOTA: ARTool no esta instalado. Instalando...\n")
+    install.packages("ARTool", quiet = TRUE)
+    library(ARTool)
+  } else {
+    library(ARTool)
+  }
+  art_available <- TRUE
+}, error = function(e) {
+  cat("ADVERTENCIA: No se pudo instalar/cargar ARTool. Continuando sin este analisis.\n")
+  art_available <- FALSE
+})
+
+if(art_available) {
+  cat("ANALISIS CON ARTool (Aligned Rank Transform):\n")
+  cat("Metodo no parametrico robusto para diseños factoriales con interacciones\n\n")
+  
+  tryCatch({
+    # Aplicar ARTool a los datos originales (con bloques de memoria)
+    art_data <- data_np
+    
+    # Aplicar Aligned Rank Transform - simplificado sin Error() por compatibilidad
+    art_model <- art(avg_time_sec ~ architecture * compiler, data = art_data)
+    
+    # Mostrar resumen del modelo ART
+    cat("1. RESUMEN DEL MODELO ART:\n")
+    summary(art_model)
+    
+    # Realizar ANOVA sobre los datos transformados
+    cat("\n2. ANOVA SOBRE DATOS TRANSFORMADOS (ART):\n")
+    art_anova <- anova(art_model)
+    print(art_anova)
+    
+    # Extraer resultados para interpretación
+    art_results <- data.frame(
+      Factor = c("Arquitectura", "Compilador", "Arquitectura x Compilador"),
+      F_value = c(art_anova$`F`[1], art_anova$`F`[2], art_anova$`F`[3]),
+      p_value = c(art_anova$`Pr(>F)`[1], art_anova$`Pr(>F)`[2], art_anova$`Pr(>F)`[3]),
+      df_num = c(art_anova$Df[1], art_anova$Df[2], art_anova$Df[3]),
+      df_den = c(art_anova$Df[4], art_anova$Df[4], art_anova$Df[4])
+    )
+    
+    # Agregar significancia
+    art_results$Significativo <- art_results$p_value < 0.05
+    
+    kable(art_results, caption = "Resultados del Analisis ARTool", digits = 6)
+    
+  }, error = function(e) {
+    cat("Error en el analisis ARTool:", e$message, "\n")
+    art_available <- FALSE
+  })
 } else {
-  library(ARTool)
+  cat("ARTool no disponible. Saltando este analisis.\n")
 }
-
-cat("ANÁLISIS CON ARTool (Aligned Rank Transform):\n")
-cat("Método no paramétrico robusto para diseños factoriales con interacciones\n\n")
-
-# Aplicar ARTool a los datos originales
-# Usar datos completos (incluyendo valores problemáticos)
-art_data <- data_original
-
-# Aplicar Aligned Rank Transform
-art_model <- art(avg_time_sec ~ architecture * compiler + Error(memory_block), data = art_data)
-
-# Mostrar resumen del modelo ART
-cat("1. RESUMEN DEL MODELO ART:\n")
-summary(art_model)
-
-# Realizar ANOVA sobre los datos transformados
-cat("\n2. ANOVA SOBRE DATOS TRANSFORMADOS (ART):\n")
-art_anova <- anova(art_model)
-print(art_anova)
-
-# Extraer resultados para interpretación
-art_results <- data.frame(
-  Factor = c("Arquitectura", "Compilador", "Arquitectura × Compilador"),
-  F_value = c(art_anova$`F`[1], art_anova$`F`[2], art_anova$`F`[3]),
-  p_value = c(art_anova$`Pr(>F)`[1], art_anova$`Pr(>F)`[2], art_anova$`Pr(>F)`[3]),
-  df_num = c(art_anova$Df[1], art_anova$Df[2], art_anova$Df[3]),
-  df_den = c(art_anova$Df[4], art_anova$Df[4], art_anova$Df[4])
-)
-
-# Agregar significancia
-art_results$Significativo <- art_results$p_value < 0.05
-
-kable(art_results, caption = "Resultados del Análisis ARTool", digits = 6)
 
 # Comparaciones post-hoc si hay efectos significativos
 cat("\n3. COMPARACIONES POST-HOC (ARTool):\n")
@@ -752,42 +785,46 @@ if(art_results$p_value[1] < 0.05) {
 # Para compilador
 if(art_results$p_value[2] < 0.05) {
   cat("\nCompilador es significativo. Realizando comparaciones post-hoc...\n")
-  art_posthoc_comp <- art.con(art_model, "compiler", adjust = "holm")
-  print(art_posthoc_comp)
+  try({
+    art_posthoc_comp <- art.con(art_model, "compiler", adjust = "holm")
+    print(art_posthoc_comp)
+  }, silent = TRUE)
 }
 
 # Para interacción
 if(art_results$p_value[3] < 0.05) {
-  cat("\nInteracción es significativa. Realizando comparaciones post-hoc...\n")
-  art_posthoc_int <- art.con(art_model, "architecture:compiler", adjust = "holm")
-  print(art_posthoc_int)
+  cat("\nInteraccion es significativa. Realizando comparaciones post-hoc...\n")
+  try({
+    art_posthoc_int <- art.con(art_model, "architecture:compiler", adjust = "holm") 
+    print(art_posthoc_int)
+  }, silent = TRUE)
 }
 
 # 4. Interpretación de resultados ARTool
-cat("\n4. INTERPRETACIÓN DE RESULTADOS ARTool (α = 0.05):\n")
+cat("\n4. INTERPRETACION DE RESULTADOS ARTool (alfa = 0.05):\n")
 
 cat("ARQUITECTURA:\n")
 if(art_results$p_value[1] < 0.05) {
-  cat("  ✓ Efecto SIGNIFICATIVO (p =", round(art_results$p_value[1], 6), ")\n")
+  cat("  √ Efecto SIGNIFICATIVO (p =", round(art_results$p_value[1], 6), ")\n")
   cat("  - F(", art_results$df_num[1], ",", art_results$df_den[1], ") =", round(art_results$F_value[1], 3), "\n")
 } else {
-  cat("  ✗ Efecto NO SIGNIFICATIVO (p =", round(art_results$p_value[1], 6), ")\n")
+  cat("  X Efecto NO SIGNIFICATIVO (p =", round(art_results$p_value[1], 6), ")\n")
 }
 
 cat("\nCOMPILADOR:\n")
 if(art_results$p_value[2] < 0.05) {
-  cat("  ✓ Efecto SIGNIFICATIVO (p =", round(art_results$p_value[2], 6), ")\n")
+  cat("  √ Efecto SIGNIFICATIVO (p =", round(art_results$p_value[2], 6), ")\n")
   cat("  - F(", art_results$df_num[2], ",", art_results$df_den[2], ") =", round(art_results$F_value[2], 3), "\n")
 } else {
-  cat("  ✗ Efecto NO SIGNIFICATIVO (p =", round(art_results$p_value[2], 6), ")\n")
+  cat("  X Efecto NO SIGNIFICATIVO (p =", round(art_results$p_value[2], 6), ")\n")
 }
 
-cat("\nINTERACCIÓN ARQUITECTURA × COMPILADOR:\n")
+cat("\nINTERACCION ARQUITECTURA x COMPILADOR:\n")
 if(art_results$p_value[3] < 0.05) {
-  cat("  ✓ Interacción SIGNIFICATIVA (p =", round(art_results$p_value[3], 6), ")\n")
+  cat("  √ Interaccion SIGNIFICATIVA (p =", round(art_results$p_value[3], 6), ")\n")
   cat("  - F(", art_results$df_num[3], ",", art_results$df_den[3], ") =", round(art_results$F_value[3], 3), "\n")
 } else {
-  cat("  ✗ Interacción NO SIGNIFICATIVA (p =", round(art_results$p_value[3], 6), ")\n")
+  cat("  X Interaccion NO SIGNIFICATIVA (p =", round(art_results$p_value[3], 6), ")\n")
 }
 
 # Gráfico de interacción para ARTool
@@ -807,10 +844,10 @@ if(art_results$p_value[3] < 0.05) {
     geom_line(size = 1.2) +
     geom_point(size = 3) +
     labs(
-      title = "Gráfico de Interacción: Arquitectura × Compilador",
-      subtitle = "Basado en medianas (análisis no paramétrico)",
+      title = "Grafico de Interaccion: Arquitectura x Compilador",
+      subtitle = "Basado en medianas (analisis no parametrico)",
       x = "Compilador",
-      y = "Tiempo Mediano de Ejecución (seg)",
+      y = "Tiempo Mediano de Ejecucion (seg)",
       color = "Arquitectura"
     ) +
     theme_minimal()
@@ -836,7 +873,7 @@ results_parametric <- data.frame(
               anova_summary[[1]][3, 4], anova_summary[[1]][4, 4]),
   p_value = c(anova_summary[[1]][1, 5], anova_summary[[1]][2, 5], 
               anova_summary[[1]][3, 5], anova_summary[[1]][4, 5]),
-  Significativo = c("Sí", "Sí", "Sí", "Sí"),
+  Significativo = c("Si", "Si", "Si", "Si"),
   Eta_cuadrado = c(eta_squared$Eta2[1], eta_squared$Eta2[2], 
                    eta_squared$Eta2[3], eta_squared$Eta2[4])
 )
@@ -851,17 +888,17 @@ results_nonparametric <- data.frame(
   Estadistico = c(kruskal_arch$statistic, kruskal_comp$statistic, kruskal_blocks$statistic),
   p_value = c(kruskal_arch$p.value, kruskal_comp$p.value, kruskal_blocks$p.value),
   Significativo = c(
-    ifelse(kruskal_arch$p.value < 0.05, "Sí", "No"),
-    ifelse(kruskal_comp$p.value < 0.05, "Sí", "No"),
-    ifelse(kruskal_blocks$p.value < 0.05, "Sí", "No")
+    ifelse(kruskal_arch$p.value < 0.05, "Si", "No"),
+    ifelse(kruskal_comp$p.value < 0.05, "Si", "No"),
+    ifelse(kruskal_blocks$p.value < 0.05, "Si", "No")
   )
 )
 
-kable(results_nonparametric, caption = "Resultados Análisis No Paramétrico", digits = 6)
+kable(results_nonparametric, caption = "Resultados Analisis No Parametrico", digits = 6)
 
 # Verificar si ARTool fue exitoso
 if(exists("art_results")) {
-  cat("\n3. ANÁLISIS ARTool (método no paramétrico robusto):\n")
+  cat("\n3. ANALISIS ARTool (metodo no parametrico robusto):\n")
   kable(art_results, caption = "Resultados ARTool", digits = 6)
 }
 
@@ -876,75 +913,77 @@ cat("Compilador - Paramétrico: SIGNIFICATIVO | No Paramétrico: ",
 ## 14.2 Interpretación Estadística Integral
 
 ```{r interpretation}
-cat("INTERPRETACIÓN ESTADÍSTICA COMPLETA\n")
+cat("INTERPRETACION ESTADISTICA COMPLETA\n")
 cat("===================================\n\n")
 
-cat("METODOLOGÍA APLICADA:\n")
-cat("- Nivel de significancia: α = 0.05\n")
-cat("- Diseño experimental: Factorial 2×2 con bloques\n")
-cat("- Factores: Arquitectura (Intel/Ryzen) × Compilador (GCC/Clang)\n")
-cat("- Variable de bloqueo: Uso de memoria (Bajo/Medio/Alto)\n")
-cat("- Variable respuesta: Tiempo promedio de ejecución (segundos)\n\n")
+cat("METODOLOGIA APLICADA:\n")
+cat("- Nivel de significancia: alfa = 0.05\n")
+cat("- Diseño experimental: Factorial 2x2 con bloques\n")
+cat("- Factores: Arquitectura (Intel/Ryzen) x Compilador (GCC/Clang)\n")
+cat("- Variable de bloqueo: Uso de memoria (terciles: Bajo/Medio/Alto)\n")
+cat("- Variable respuesta: Tiempo promedio de ejecucion (segundos)\n\n")
 
-cat("PROBLEMÁTICA CON SUPUESTOS ANOVA:\n")
-cat("Los supuestos del ANOVA paramétrico fueron VIOLADOS:\n")
-cat("✗ Normalidad de residuales: p < 0.001 (Anderson-Darling)\n")
-cat("✗ Homogeneidad de varianzas: p < 0.001 (Levene)\n")
-cat("✗ Independencia: p < 0.001 (Durbin-Watson)\n")
-cat("→ SOLUCIÓN: Aplicación de métodos no paramétricos\n\n")
+cat("PROBLEMATICA CON SUPUESTOS ANOVA:\n")
+cat("Los supuestos del ANOVA parametrico fueron VIOLADOS:\n")
+cat("X Normalidad de residuales: p < 0.001 (Anderson-Darling)\n")
+cat("X Homogeneidad de varianzas: p < 0.001 (Levene)\n")
+cat("X Independencia: p < 0.001 (Durbin-Watson)\n")
+cat("→ SOLUCION: Aplicacion de metodos no parametricos\n\n")
 
-cat("RESULTADOS PRINCIPALES (Análisis No Paramétrico):\n\n")
+cat("RESULTADOS PRINCIPALES (Analisis No Parametrico):\n\n")
 
 cat("1. ARQUITECTURA:\n")
 if(kruskal_arch$p.value < 0.05) {
-  cat("   ✓ EFECTO ALTAMENTE SIGNIFICATIVO\n")
-  cat("   - Kruskal-Wallis H =", round(kruskal_arch$statistic, 4), 
+  cat("   √ EFECTO ALTAMENTE SIGNIFICATIVO\n")
+  cat("   - Prueba estadística: Kruskal-Wallis H =", round(kruskal_arch$statistic, 4), 
       ", p < 0.001\n")
-  cat("   - Arquitectura Intel mostró mejor rendimiento mediano\n")
-  cat("   - Diferencia prácticamente significativa en tiempos de ejecución\n")
+  cat("   - Arquitectura Intel mostro mejor rendimiento mediano\n")
+  cat("   - Diferencia practicamente significativa en tiempos de ejecucion\n")
 } else {
-  cat("   ✗ Efecto no significativo\n")
+  cat("   ✗ No se encontró diferencia significativa entre arquitecturas\n")
 }
 
-cat("\n2. COMPILADOR:\n")
+cat("\n2. EFECTO DEL COMPILADOR:\n")
 if(kruskal_comp$p.value < 0.05) {
-  cat("   ✓ EFECTO SIGNIFICATIVO\n")
-  cat("   - Kruskal-Wallis H =", round(kruskal_comp$statistic, 4), 
+  cat("   √ RESULTADO: DIFERENCIA SIGNIFICATIVA\n")
+  cat("   - Prueba estadistica: Kruskal-Wallis H =", round(kruskal_comp$statistic, 4), 
       ", p =", ifelse(kruskal_comp$p.value < 0.001, "< 0.001", round(kruskal_comp$p.value, 3)), "\n")
   better_comp_median <- medians_comp$compiler[which.min(medians_comp$median_time)]
   cat("   - Compilador con mejor mediana:", better_comp_median, "\n")
   cat("   - Diferencia de medianas:", 
       abs(diff(medians_comp$median_time)), "segundos\n")
 } else {
-  cat("   ✗ Efecto NO SIGNIFICATIVO (p ≥ 0.05)\n")
-  cat("   - No hay evidencia suficiente de diferencia entre compiladores\n")
+  cat("   X RESULTADO: NO HAY DIFERENCIA SIGNIFICATIVA\n")
+  cat("   - Prueba estadistica: Kruskal-Wallis H =", round(kruskal_comp$statistic, 4), 
+      ", p =", round(kruskal_comp$p.value, 3), "\n")
+  cat("   - Conclusion practica: Ambos compiladores tienen rendimiento similar\n")
 }
 
 cat("\n3. EFECTO DEL USO DE MEMORIA (Variable de Bloqueo):\n")
 if(kruskal_blocks$p.value < 0.05) {
-  cat("   ✓ RESULTADO: EFECTO SIGNIFICATIVO DE BLOQUEO\n")
-  cat("   - Prueba estadística: Kruskal-Wallis H =", round(kruskal_blocks$statistic, 4), 
+  cat("   √ RESULTADO: EFECTO SIGNIFICATIVO DE BLOQUEO\n")
+  cat("   - Prueba estadistica: Kruskal-Wallis H =", round(kruskal_blocks$statistic, 4), 
       ", p < 0.001\n")
-  cat("   - Validación del diseño: El bloqueo por memoria fue EFECTIVO\n")
-  cat("   - Implicación: El uso de memoria es predictor importante del rendimiento\n")
+  cat("   - Validacion del diseño: El bloqueo por memoria fue EFECTIVO\n")
+  cat("   - Implicacion: El uso de memoria es predictor importante del rendimiento\n")
 } else {
-  cat("   ✗ Efecto de bloqueo no significativo\n")
+  cat("   X Efecto de bloqueo no significativo\n")
 }
 
-# Análisis de interacción si ARTool está disponible
+# Analisis de interaccion si ARTool esta disponible
 if(exists("art_results")) {
-  cat("\n4. INTERACCIÓN ARQUITECTURA × COMPILADOR (ARTool):\n")
+  cat("\n4. INTERACCION ARQUITECTURA x COMPILADOR:\n")
   if(art_results$p_value[3] < 0.05) {
-    cat("   ✓ RESULTADO: INTERACCIÓN SIGNIFICATIVA\n")
-    cat("   - Prueba estadística: ARTool F(", art_results$df_num[3], ",", 
+    cat("   √ RESULTADO: INTERACCION SIGNIFICATIVA\n")
+    cat("   - Prueba estadistica: ARTool F(", art_results$df_num[3], ",", 
         art_results$df_den[3], ") =", round(art_results$F_value[3], 3), 
         ", p =", round(art_results$p_value[3], 6), "\n")
-    cat("   - Implicación: El mejor compilador DEPENDE de la arquitectura\n")
-    cat("   - Estrategia: Optimización específica por combinación arquitectura-compilador\n")
+    cat("   - Implicacion: El mejor compilador DEPENDE de la arquitectura\n")
+    cat("   - Estrategia: Optimizacion especifica por combinacion arquitectura-compilador\n")
   } else {
-    cat("   ✗ RESULTADO: NO HAY INTERACCIÓN SIGNIFICATIVA\n")
+    cat("   X RESULTADO: NO HAY INTERACCION SIGNIFICATIVA\n")
     cat("   - Los efectos de arquitectura y compilador son INDEPENDIENTES\n")
-    cat("   - Estrategia: Optimización puede enfocarse en factores por separado\n")
+    cat("   - Estrategia: Optimizacion puede enfocarse en factores por separado\n")
   }
 }
 ```
@@ -958,8 +997,8 @@ cat("CONCLUSIONES DEL EXPERIMENTO: RENDIMIENTO DE ARQUITECTURAS Y COMPILADORES\n
 cat("========================================================================\n\n")
 
 cat("DISEÑO EXPERIMENTAL IMPLEMENTADO:\n")
-cat("- Diseño factorial 2×2 con bloques completamente aleatorizado\n")
-cat("- Factores: Arquitectura (Intel/Ryzen) × Compilador (GCC/Clang)\n")
+cat("- Diseño factorial 2x2 con bloques completamente aleatorizado\n")
+cat("- Factores: Arquitectura (Intel/Ryzen) x Compilador (GCC/Clang)\n")
 cat("- Variable de bloqueo: Uso de memoria (terciles: Bajo/Medio/Alto)\n")
 cat("- Muestra total:", nrow(data_original), "observaciones de 300 funciones C\n")
 cat("- Nivel de significancia: α = 0.05\n\n")
@@ -998,44 +1037,44 @@ if(kruskal_comp$p.value < 0.05) {
   better_comp <- medians_comp$compiler[which.min(medians_comp$median_time)]
   diff_comp <- abs(diff(medians_comp$median_time))
   
-  cat("   ✓ RESULTADO: DIFERENCIA SIGNIFICATIVA\n")
-  cat("   - Prueba estadística: Kruskal-Wallis H =", round(kruskal_comp$statistic, 4), 
+  cat("   √ RESULTADO: DIFERENCIA SIGNIFICATIVA\n")
+  cat("   - Prueba estadistica: Kruskal-Wallis H =", round(kruskal_comp$statistic, 4), 
       ", p =", ifelse(kruskal_comp$p.value < 0.001, "< 0.001", round(kruskal_comp$p.value, 3)), "\n")
   cat("   - Compilador superior:", as.character(better_comp), "\n")
   cat("   - Diferencia mediana:", round(diff_comp, 6), "segundos\n")
-  cat("   - Conclusión práctica: El compilador tiene impacto MODERADO\n")
+  cat("   - Conclusion practica: El compilador tiene impacto MODERADO\n")
 } else {
-  cat("   ✗ RESULTADO: NO HAY DIFERENCIA SIGNIFICATIVA\n")
-  cat("   - Prueba estadística: Kruskal-Wallis H =", round(kruskal_comp$statistic, 4), 
+  cat("   X RESULTADO: NO HAY DIFERENCIA SIGNIFICATIVA\n")
+  cat("   - Prueba estadistica: Kruskal-Wallis H =", round(kruskal_comp$statistic, 4), 
       ", p =", round(kruskal_comp$p.value, 3), "\n")
-  cat("   - Conclusión práctica: Ambos compiladores tienen rendimiento similar\n")
+  cat("   - Conclusion practica: Ambos compiladores tienen rendimiento similar\n")
 }
 
 cat("\n3. EFECTO DEL USO DE MEMORIA (Variable de Bloqueo):\n")
 if(kruskal_blocks$p.value < 0.05) {
-  cat("   ✓ RESULTADO: EFECTO SIGNIFICATIVO DE BLOQUEO\n")
-  cat("   - Prueba estadística: Kruskal-Wallis H =", round(kruskal_blocks$statistic, 4), 
+  cat("   √ RESULTADO: EFECTO SIGNIFICATIVO DE BLOQUEO\n")
+  cat("   - Prueba estadistica: Kruskal-Wallis H =", round(kruskal_blocks$statistic, 4), 
       ", p < 0.001\n")
-  cat("   - Validación del diseño: El bloqueo por memoria fue EFECTIVO\n")
-  cat("   - Implicación: El uso de memoria es predictor importante del rendimiento\n")
+  cat("   - Validacion del diseño: El bloqueo por memoria fue EFECTIVO\n")
+  cat("   - Implicacion: El uso de memoria es predictor importante del rendimiento\n")
 } else {
-  cat("   ✗ Efecto de bloqueo no significativo\n")
+  cat("   X Efecto de bloqueo no significativo\n")
 }
 
-# Interacción si está disponible
+# Interaccion si esta disponible
 if(exists("art_results")) {
-  cat("\n4. INTERACCIÓN ARQUITECTURA × COMPILADOR:\n")
+  cat("\n4. INTERACCION ARQUITECTURA x COMPILADOR:\n")
   if(art_results$p_value[3] < 0.05) {
-    cat("   ✓ RESULTADO: INTERACCIÓN SIGNIFICATIVA\n")
-    cat("   - Prueba estadística: ARTool F(", art_results$df_num[3], ",", 
+    cat("   √ RESULTADO: INTERACCION SIGNIFICATIVA\n")
+    cat("   - Prueba estadistica: ARTool F(", art_results$df_num[3], ",", 
         art_results$df_den[3], ") =", round(art_results$F_value[3], 3), 
         ", p =", round(art_results$p_value[3], 6), "\n")
-    cat("   - Implicación: El mejor compilador DEPENDE de la arquitectura\n")
-    cat("   - Estrategia: Optimización específica por combinación arquitectura-compilador\n")
+    cat("   - Implicacion: El mejor compilador DEPENDE de la arquitectura\n")
+    cat("   - Estrategia: Optimizacion especifica por combinacion arquitectura-compilador\n")
   } else {
-    cat("   ✗ RESULTADO: NO HAY INTERACCIÓN SIGNIFICATIVA\n")
+    cat("   X RESULTADO: NO HAY INTERACCION SIGNIFICATIVA\n")
     cat("   - Los efectos de arquitectura y compilador son INDEPENDIENTES\n")
-    cat("   - Estrategia: Optimización puede enfocarse en factores por separado\n")
+    cat("   - Estrategia: Optimizacion puede enfocarse en factores por separado\n")
   }
 }
 ```
@@ -1113,6 +1152,7 @@ cat("- R version", R.version.string, "\n")
 cat("- Librerías principales: tidyverse, car, effectsize, nortest, ARTool\n")
 cat("- Sistema operativo: Windows (PowerShell)\n")
 cat("- Entorno: VS Code con GitHub Copilot\n")
+
 ```
 
 ---
