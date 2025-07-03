@@ -12,7 +12,7 @@ output:
     code_folding: show
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, echo=FALSE}
 # Configuración global de chunks con manejo de errores
 knitr::opts_chunk$set(
   echo = TRUE, 
@@ -46,7 +46,7 @@ En el dominio del desarrollo de software de alto rendimiento, la elección de la
 
 # 2. Carga y Preparación de Datos
 
-```{r load_libraries}
+```{r load_libraries, echo=FALSE}
 
 # Función para instalar paquetes si no están disponibles
 install_if_needed <- function(packages) {
@@ -78,7 +78,7 @@ cat("- Tema de gráficos configurado\n")
 cat("- Análisis listo para ejecutar\n\n")
 ```
 
-```{r load_data}
+```{r load_data, echo=FALSE}
 # Cargar datos
 data <- read.csv("../data/execution/combined_data.csv", stringsAsFactors = TRUE)
 
@@ -112,7 +112,7 @@ data <- data_clean
 
 ## 3.1 Creación de Bloques basados en Uso de Memoria
 
-```{r create_blocks}
+```{r create_blocks, echo=FALSE}
 # Analizar la distribución de max_mem_kb para crear bloques apropiados
 summary(data$max_mem_kb)
 
@@ -150,7 +150,7 @@ ggplot(data, aes(x = memory_block, fill = memory_block)) +
 
 ## 3.2 Verificación del Diseño Experimental
 
-```{r verify_design}
+```{r verify_design, echo=FALSE}
 # Verificar balance del diseño
 design_summary <- data %>%
   group_by(architecture, compiler, memory_block) %>%
@@ -172,7 +172,7 @@ print(balance_check)
 
 ## 4.1 Estadísticas Descriptivas
 
-```{r descriptive_stats}
+```{r descriptive_stats, echo=FALSE}
 # Estadísticas descriptivas por grupo
 descriptive_stats <- data %>%
   group_by(architecture, compiler, memory_block) %>%
@@ -191,7 +191,7 @@ kable(descriptive_stats, caption = "Estadísticas Descriptivas por Grupo", digit
 
 ## 4.2 Visualizaciones Exploratorias
 
-```{r exploratory_plots}
+```{r exploratory_plots, echo=FALSE}
 # Boxplot por arquitectura y compilador
 p1 <- ggplot(data, aes(x = interaction(architecture, compiler), y = avg_time_sec, fill = architecture)) +
   geom_boxplot() +
@@ -265,7 +265,7 @@ Donde:
 
 Dado que los tiempos de ejecución muestran una distribución asimétrica, aplicaremos una transformación logarítmica. Primero verificaremos que no hay valores problemáticos:
 
-```{r transformation}
+```{r transformation,echo=FALSE}
 # Verificar que no hay valores negativos o cero después de la limpieza
 cat("Rango de avg_time_sec después de limpieza:\n")
 print(range(data$avg_time_sec))
@@ -315,7 +315,7 @@ print(total_by_treatment)
 
 # 7. Ajuste del Modelo ANOVA con Bloques
 
-```{r anova_model}
+```{r anova_model, echo=FALSE}
 # Ajustar modelo ANOVA con bloques
 model <- aov(log_time ~ architecture * compiler + memory_block, data = data)
 
@@ -332,7 +332,7 @@ kable(anova_table, caption = "Tabla ANOVA - Diseño Factorial con Bloques", digi
 
 ## 8.1 Análisis de Residuales
 
-```{r assumption_checks}
+```{r assumption_checks, echo=FALSE}
 # Obtener residuales y valores ajustados
 residuals <- residuals(model)
 fitted_values <- fitted(model)
@@ -364,7 +364,7 @@ par(mfrow = c(1, 1))
 
 ## 8.2 Pruebas Formales de Supuestos
 
-```{r formal_tests}
+```{r formal_tests, echo=FALSE}
 # Test de normalidad - ajustado para muestras grandes
 n_residuals <- length(residuals)
 cat("Número de residuales:", n_residuals, "\n\n")
@@ -452,7 +452,7 @@ if(dw_test$p > 0.05) {
 
 # 9. Análisis de Tamaño del Efecto y Potencia
 
-```{r effect_size_power}
+```{r effect_size_power, echo=FALSE}
 # Calcular eta cuadrado (eta²) para tamaño del efecto
 eta_squared <- eta_squared(model, partial = FALSE)
 partial_eta_squared <- eta_squared(model, partial = TRUE)
@@ -486,7 +486,7 @@ cat("Potencia - Interacción:", round(power_int$power, 4), "\n")
 
 # 10. Comparaciones Múltiples (Post Hoc)
 
-```{r post_hoc}
+```{r post_hoc, echo=FALSE}
 # Pruebas post hoc para factores significativos
 alpha_level <- 0.05
 
@@ -535,7 +535,7 @@ print(pairwise_comp)
 
 # 11. Análisis de Medias y Efectos
 
-```{r means_analysis}
+```{r means_analysis, echo=FALSE}
 # Calcular medias por grupo
 means_summary <- data %>%
   group_by(architecture, compiler) %>%
@@ -578,7 +578,7 @@ ggplot(means_summary, aes(x = compiler, y = mean_log, color = architecture, grou
 
 Dado que los supuestos del ANOVA fueron violados significativamente, procederemos con pruebas no paramétricas usando los datos originales (incluyendo valores problemáticos):
 
-```{r nonparametric_tests}
+```{r nonparametric_tests, echo=FALSE}
 cat("JUSTIFICACIÓN PARA PRUEBAS NO PARAMÉTRICAS:\n")
 cat("Los supuestos del ANOVA fueron violados:\n")
 cat("- Normalidad: Rechazada por Anderson-Darling y Shapiro-Wilk\n")
@@ -710,7 +710,7 @@ if(kruskal_blocks$p.value < 0.05) {
 
 Dado que tenemos un diseño factorial con interacciones y los supuestos del ANOVA han sido violados, utilizaremos ARTool como método no paramétrico robusto para diseños factoriales:
 
-```{r artool_analysis}
+```{r artool_analysis, echo=FALSE}
 # Nota: ARTool requiere instalación del paquete 'ARTool'
 # install.packages("ARTool") # Descomentar si no está instalado
 
@@ -860,7 +860,7 @@ if(art_results$p_value[3] < 0.05) {
 
 ## 14.1 Resumen Ejecutivo del Análisis
 
-```{r results_summary}
+```{r results_summary, echo=FALSE}
 # Crear tabla comparativa de resultados
 cat("RESUMEN COMPARATIVO DE ANÁLISIS ESTADÍSTICOS\n")
 cat("===========================================\n\n")
@@ -912,7 +912,7 @@ cat("Compilador - Paramétrico: SIGNIFICATIVO | No Paramétrico: ",
 
 ## 14.2 Interpretación Estadística Integral
 
-```{r interpretation}
+```{r interpretation, echo=FALSE}
 cat("INTERPRETACION ESTADISTICA COMPLETA\n")
 cat("===================================\n\n")
 
@@ -992,7 +992,7 @@ if(exists("art_results")) {
 
 ## 15.1 Conclusiones Principales
 
-```{r conclusions_main}
+```{r conclusions_main, echo=FALSE}
 cat("CONCLUSIONES DEL EXPERIMENTO: RENDIMIENTO DE ARQUITECTURAS Y COMPILADORES\n")
 cat("========================================================================\n\n")
 
@@ -1081,7 +1081,7 @@ if(exists("art_results")) {
 
 ## 15.2 Respuesta a las Preguntas de Investigación
 
-```{r research_questions}
+```{r research_questions, echo=FALSE}
 cat("\nRESPUESTA A LAS PREGUNTAS DE INVESTIGACIÓN ORIGINALES:\n")
 cat("======================================================\n\n")
 
@@ -1128,7 +1128,7 @@ if(kruskal_blocks$p.value < 0.05) {
 
 ## 15.3 Declaración de Validez y Reproducibilidad
 
-```{r validity_statement}
+```{r validity_statement, echo=FALSE}
 cat("\nDECLARACIÓN DE VALIDEZ Y REPRODUCIBILIDAD:\n")
 cat("==========================================\n\n")
 
