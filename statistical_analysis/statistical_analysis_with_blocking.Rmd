@@ -1,15 +1,17 @@
 ---
-title: "Análisis Estadístico del Rendimiento de Funciones C: Arquitecturas y Compiladores con Diseño de Bloques"
+title: 'Análisis Estadístico del Rendimiento de Funciones C: Arquitecturas y Compiladores
+  con Diseño de Bloques'
 author: "Análisis Experimental - CI0131"
 date: "`r Sys.Date()`"
-output: 
+output:
   html_document:
-    toc: true
-    toc_depth: 3
-    toc_float: true
+    toc: false
     theme: united
     highlight: tango
     code_folding: show
+  pdf_document:
+    toc: false
+encoding: "UTF-8"
 ---
 
 ```{r setup, include=FALSE, echo=FALSE}
@@ -24,8 +26,14 @@ knitr::opts_chunk$set(
   results = 'hold'
 )
 
-# Configurar localización para evitar problemas de UTF-8
-Sys.setlocale("LC_ALL", "C")
+# Configurar localización para UTF-8 y evitar problemas de encoding
+Sys.setlocale("LC_ALL", "en_US.UTF-8")
+
+# Configuraciones adicionales para encoding en Windows
+options(encoding = "UTF-8")
+if (.Platform$OS.type == "windows") {
+  Sys.setlocale("LC_CTYPE", "Spanish_Spain.utf8")
+}
 ```
 
 # 1. Introducción y Contextualización
